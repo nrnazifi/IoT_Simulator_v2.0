@@ -25,6 +25,8 @@ import edu.campuswien.smartcity.views.dashboard.DashboardView;
 import edu.campuswien.smartcity.views.helloworld.HelloWorldView;
 import edu.campuswien.smartcity.views.list.ListView;
 import edu.campuswien.smartcity.views.masterdetail.MasterDetailView;
+import edu.campuswien.smartcity.views.parking.ParkingConfigView;
+import edu.campuswien.smartcity.views.parking.ParkingLotListView;
 import edu.campuswien.smartcity.views.personform.PersonFormView;
 
 /**
@@ -129,6 +131,9 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
+                new MenuItemInfo("Parking Config", "la la-parking", ParkingConfigView.class), //
+                new MenuItemInfo("Parking List", "la la-list", ParkingLotListView.class), //
+
                 new MenuItemInfo("Hello World", "la la-globe", HelloWorldView.class), //
 
                 new MenuItemInfo("About", "la la-file", AboutView.class), //
