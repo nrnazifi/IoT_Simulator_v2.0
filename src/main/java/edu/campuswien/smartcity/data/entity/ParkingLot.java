@@ -1,4 +1,4 @@
-package edu.campuswien.smartcity.entity;
+package edu.campuswien.smartcity.data.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,22 +9,18 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class ParkingLot {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
-    private Long id;
+public class ParkingLot extends AbstractEntity {
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private String description;
 
-    @Column
+    @Column(nullable = false)
     private Integer capacity;
 
-    @Column(nullable = false)
+    @Column
     //Number of occupied spots at the beginning
     private Integer numberOfOccupiedAtStart;
 

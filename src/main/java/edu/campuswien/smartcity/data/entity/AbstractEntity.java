@@ -1,24 +1,23 @@
-package edu.campuswien.smartcity.data;
+package edu.campuswien.smartcity.data.entity;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
+@Getter
+@Setter
 public abstract class AbstractEntity {
 
     @Id
     @GeneratedValue
+    @Column
     private UUID id;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
 
     @Override
     public int hashCode() {

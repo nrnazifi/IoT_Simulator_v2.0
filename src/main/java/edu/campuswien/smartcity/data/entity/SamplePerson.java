@@ -1,6 +1,5 @@
 package edu.campuswien.smartcity.data.entity;
 
-import edu.campuswien.smartcity.data.AbstractEntity;
 import java.time.LocalDate;
 import javax.persistence.Entity;
 

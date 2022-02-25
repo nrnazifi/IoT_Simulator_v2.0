@@ -1,4 +1,4 @@
-package edu.campuswien.smartcity.entity;
+package edu.campuswien.smartcity.data.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,14 +8,9 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class ParkingSpot {
+public class ParkingSpot extends AbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
-    private Long id;
-
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     // generated name as
     private String deviceId;
 

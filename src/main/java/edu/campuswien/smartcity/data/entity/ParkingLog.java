@@ -1,17 +1,16 @@
-package edu.campuswien.smartcity.entity;
+package edu.campuswien.smartcity.data.entity;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 public class ParkingLog {
     @Id
-    @Column
+    @Column(nullable = false)
     private Long timestampId;
 
     @ManyToOne
@@ -22,6 +21,6 @@ public class ParkingLog {
     @JoinColumn
     private ParkingSpot parkingSpot;
 
-    @Column
+    @Column(nullable = false)
     private Boolean status;
 }
