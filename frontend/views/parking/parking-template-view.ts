@@ -7,8 +7,8 @@ import '@vaadin/vaadin-text-field';
 
 
 
-@customElement('parking-list-view')
-export class ParkingLotListView extends LitElement {
+@customElement('parking-template-view')
+export class ParkingTemplateView extends LitElement {
     createRenderRoot() {
         // Do not use a shadow root
         return this;

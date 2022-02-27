@@ -19,15 +19,8 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import edu.campuswien.smartcity.views.about.AboutView;
-import edu.campuswien.smartcity.views.cardlist.CardListView;
-import edu.campuswien.smartcity.views.checkoutform.CheckoutFormView;
-import edu.campuswien.smartcity.views.dashboard.DashboardView;
-import edu.campuswien.smartcity.views.helloworld.HelloWorldView;
-import edu.campuswien.smartcity.views.list.ListView;
-import edu.campuswien.smartcity.views.masterdetail.MasterDetailView;
-import edu.campuswien.smartcity.views.parking.ParkingConfigView;
-import edu.campuswien.smartcity.views.parking.ParkingLotListView;
-import edu.campuswien.smartcity.views.personform.PersonFormView;
+import edu.campuswien.smartcity.views.parking.ParkingFormView;
+import edu.campuswien.smartcity.views.parking.ParkingTemplateView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -131,24 +124,9 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Parking Config", "la la-parking", ParkingConfigView.class), //
-                new MenuItemInfo("Parking List", "la la-list", ParkingLotListView.class), //
-
-                new MenuItemInfo("Hello World", "la la-globe", HelloWorldView.class), //
-
+                new MenuItemInfo("Parking Template", "la la-parking", ParkingTemplateView.class), //
+                new MenuItemInfo("Parking Config", "la la-parking", ParkingFormView.class), //
                 new MenuItemInfo("About", "la la-file", AboutView.class), //
-
-                new MenuItemInfo("Dashboard", "la la-chart-area", DashboardView.class), //
-
-                new MenuItemInfo("Card List", "la la-list", CardListView.class), //
-
-                new MenuItemInfo("List", "la la-th", ListView.class), //
-
-                new MenuItemInfo("Master-Detail", "la la-columns", MasterDetailView.class), //
-
-                new MenuItemInfo("Person Form", "la la-user", PersonFormView.class), //
-
-                new MenuItemInfo("Checkout Form", "la la-credit-card", CheckoutFormView.class), //
 
         };
     }

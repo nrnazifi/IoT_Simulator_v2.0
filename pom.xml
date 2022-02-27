@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- Project from https://start.vaadin.com/project/e4064260-63f9-478c-b682-ee75dbe52dcb -->
+    <!-- Project from https://start.vaadin.com/project/f063b033-ab79-4b6e-b8ed-bab35a6e56ad -->
     <groupId>edu.campuswien.smartcity</groupId>
     <artifactId>iotsimulator</artifactId>
     <name>IoT_Simulator</name>

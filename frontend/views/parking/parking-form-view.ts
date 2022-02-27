@@ -6,8 +6,8 @@ import '@vaadin/vaadin-text-field/vaadin-integer-field';
 import '@vaadin/vaadin-ordered-layout/vaadin-horizontal-layout';
 import '@vaadin/vaadin-button';
 
-@customElement('parking-config-view')
-export class ParkingConfigView extends LitElement {
+@customElement('parking-form-view')
+export class ParkingFormView extends LitElement {
     createRenderRoot() {
         // Do not use a shadow root
         return this;

@@ -19,12 +19,12 @@ import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@PageTitle("Parking lot configuration")
-@Route(value = "parking-config", layout = MainLayout.class)
-@Tag("parking-config-view")
-@JsModule("./views/parking/parking-config-view.ts")
+@PageTitle("Parking lot template")
+@Route(value = "parking-form", layout = MainLayout.class)
+@Tag("parking-form-view")
+@JsModule("./views/parking/parking-form-view.ts")
 @Uses(Icon.class)
-public class ParkingConfigView extends LitTemplate {
+public class ParkingFormView extends LitTemplate {
     @Id("name")
     private TextField name;
     @Id("description")
@@ -42,7 +42,7 @@ public class ParkingConfigView extends LitTemplate {
     private Binder<ParkingLot> binder = new Binder(ParkingLot.class);
     private ParkingLotService parkingLotService;
 
-    public ParkingConfigView(@Autowired ParkingLotService parkingLotService) {
+    public ParkingFormView(@Autowired ParkingLotService parkingLotService) {
         this.parkingLotService =parkingLotService;
 
         binder.bindInstanceFields(this);

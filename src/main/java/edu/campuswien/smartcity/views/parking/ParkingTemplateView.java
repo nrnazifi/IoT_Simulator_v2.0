@@ -21,12 +21,12 @@ import edu.campuswien.smartcity.views.MainLayout;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@PageTitle("Parking lot list")
+@PageTitle("Parking lot template")
 @Route(value = "parking-list", layout = MainLayout.class)
-@Tag("parking-list-view")
-@JsModule("./views/parking/parking-list-view.ts")
+@Tag("parking-template-view")
+@JsModule("./views/parking/parking-template-view.ts")
 @Uses(Icon.class)
-public class ParkingLotListView extends LitTemplate {
+public class ParkingTemplateView extends LitTemplate {
     @Id("grid")
     private GridPro<ParkingLot> grid;
     private ListDataProvider<ParkingLot> dataProvider;
@@ -36,7 +36,7 @@ public class ParkingLotListView extends LitTemplate {
     private Grid.Column<ParkingLot> capacityColumn;
     private Grid.Column<ParkingLot> occupiedNumberColumn;
 
-    public ParkingLotListView(@Autowired ParkingLotService parkingLotService) {
+    public ParkingTemplateView(@Autowired ParkingLotService parkingLotService) {
         this.parkingLotService = parkingLotService;
         createGrid();
     }
