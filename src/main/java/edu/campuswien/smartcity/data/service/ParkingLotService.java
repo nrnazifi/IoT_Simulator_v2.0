@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,5 +26,20 @@ public class ParkingLotService extends CrudService<ParkingLot, UUID> {
 
     public List<ParkingLot> list() {
         return this.getRepository().findAll();
+    }
+
+    @Override
+    public ParkingLot update(ParkingLot entity) {
+        if(entity.getLastUpdatedTime() != null) {
+            entity.setLastUpdatedTime(LocalDateTime.now());
+        }
+        if(entity.getStartId() == null) {
+            entity.setStartId(0);
+        }
+        if(entity.getNumberOfOccupiedAtStart() == null) {
+            entity.setNumberOfOccupiedAtStart(0);
+        }
+
+        return this.getRepository().save(entity);
     }
 }

@@ -19,6 +19,8 @@ import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
+
 @PageTitle("Parking lot template")
 @Route(value = "parking-form", layout = MainLayout.class)
 @Tag("parking-form-view")
@@ -57,8 +59,10 @@ public class ParkingFormView extends LitTemplate {
     }
 
     private void saveForm(){
-        parkingLotService.update(binder.getBean());
-        Notification.show(binder.getBean().getClass().getSimpleName() + " details stored.");
+        ParkingLot parkingLot = binder.getBean();
+        parkingLot.setLastUpdatedTime(LocalDateTime.now());
+        parkingLotService.update(parkingLot);
+        Notification.show(parkingLot.getClass().getSimpleName() + " details stored.");
         clearForm();
     }
 }
