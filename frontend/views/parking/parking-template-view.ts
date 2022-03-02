@@ -23,12 +23,8 @@ export class ParkingTemplateView extends LitElement {
                 <p class="mb-xl mt-0 text-secondary">Your saved templates</p>
             </vaadin-vertical-layout>
             <vaadin-horizontal-layout class="items-center justify-between" theme="padding spacing">
-                <vaadin-button theme="primary" id="add">
-                    Add
-                </vaadin-button>
-                <vaadin-button theme="success primary" id="import">
-                    Import Template
-                </vaadin-button>
+                <vaadin-button theme="primary" id="btnAdd">Add</vaadin-button>
+                <vaadin-button theme="success primary" id="btnImport">Import Template</vaadin-button>
             </vaadin-horizontal-layout>
         </vaadin-horizontal-layout>
         <ol class="gap-m grid list-none m-0 p-0">
