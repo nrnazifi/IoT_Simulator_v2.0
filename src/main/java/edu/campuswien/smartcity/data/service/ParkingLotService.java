@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class ParkingLotService extends CrudService<ParkingLot, UUID> {
+public class ParkingLotService extends CrudService<ParkingLot, Long> {
 
     private ParkingLotRepository repository;
     public ParkingLotService(@Autowired ParkingLotRepository repository) {
@@ -20,7 +20,7 @@ public class ParkingLotService extends CrudService<ParkingLot, UUID> {
     }
 
     @Override
-    protected JpaRepository<ParkingLot, UUID> getRepository() {
+    protected JpaRepository<ParkingLot, Long> getRepository() {
         return this.repository;
     }
 
@@ -41,5 +41,9 @@ public class ParkingLotService extends CrudService<ParkingLot, UUID> {
         }
 
         return this.getRepository().save(entity);
+    }
+
+    public void delete(ParkingLot entity) {
+        this.getRepository().deleteById(entity.getId());
     }
 }

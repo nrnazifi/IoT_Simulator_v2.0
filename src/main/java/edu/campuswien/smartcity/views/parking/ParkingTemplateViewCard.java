@@ -16,7 +16,7 @@ import java.time.format.FormatStyle;
 @JsModule("./views/parking/parking-template-view-card.ts")
 @Tag("parking-template-view-card")
 public class ParkingTemplateViewCard extends LitTemplate {
-
+    //Content
     @Id
     private Image image;
     @Id
@@ -25,29 +25,32 @@ public class ParkingTemplateViewCard extends LitTemplate {
     private Span subtitle;
     @Id
     private Paragraph text;
+    //Actions
+    @Id
+    private Span delete;
+    @Id
+    private Span edit;
+    @Id
+    private Span duplicate;
+    @Id
+    private Span export;
+    @Id
+    private Span spotList;
 
-    @Id
-    private Anchor delete;
-    @Id
-    private Anchor edit;
-    @Id
-    private Anchor duplicate;
-    @Id
-    private Anchor export;
-    @Id
-    private Anchor spotList;
-
-    public ParkingTemplateViewCard(ParkingLot parkingLot) {
+    public ParkingTemplateViewCard(ParkingTemplateView mainView, ParkingLot parkingLot) {
         //this.image.setSrc("");
         this.image.setAlt(parkingLot.getName());
         this.header.setText(parkingLot.getName());
         this.subtitle.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(parkingLot.getLastUpdatedTime()));
         this.text.setText(parkingLot.getDescription());
 
-        this.delete.setHref("/delete");
-        this.edit.setHref("/edit");
-        this.duplicate.setHref("/duplicate");
-        this.export.setHref("/export");
-        this.spotList.setHref("/spotList");
+//        this.delete.setSHref("/delete");
+//        this.edit.setHref("/parking-form");
+//        this.duplicate.setHref("/duplicate");
+//        this.export.setHref("/export");
+//        this.spotList.setHref("/spotList");
+
+        edit.addClickListener(e -> mainView.onEdit(parkingLot));
+        delete.addClickListener(e -> mainView.onDelete(parkingLot));
     }
 }

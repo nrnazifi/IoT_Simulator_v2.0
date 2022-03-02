@@ -1,15 +1,15 @@
 package edu.campuswien.smartcity.views.parking;
 
-import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.*;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.Uses;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.OrderedList;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.littemplate.LitTemplate;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -30,28 +30,58 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
 
     @Id("btnAdd")
     private Button btnAdd;
-
     @Id("btnImport")
     private Button btnImport;
+    @Id("itemList")
+    private OrderedList orderedList;
+
+    private Dialog dialog = new Dialog();
+    private ParkingFormView parkingForm;
 
     public ParkingTemplateView(@Autowired ParkingLotService parkingLotService) {
         this.parkingLotService = parkingLotService;
 
         addClassNames("parking-template-view", "flex", "flex-col", "h-full");
+        //Set icons
         btnAdd.setIcon(new Icon(VaadinIcon.PLUS));
         btnImport.setIcon(new Icon(VaadinIcon.UPLOAD));
-        btnAdd.addClickListener(e -> {
-            UI.getCurrent().navigate(ParkingFormView.class);
-        });
-        btnImport.addClickListener(e -> {
-           //Import temp
-        });
+        //put icons in the right side
+        btnAdd.setIconAfterText(true);
+        btnImport.setIconAfterText(true);
 
+        dialog.getElement().setAttribute("aria-label", "Create new employee");
+        parkingForm = new ParkingFormView(this, dialog, parkingLotService);
+        parkingForm.setParkingLot(null);
+        dialog.add(parkingForm);
+
+        //Add listener
+        btnAdd.addClickListener(e -> onAdd());
+
+        updateContent();
+    }
+
+    private void onAdd() {
+        parkingForm.setParkingLot(new ParkingLot());
+        dialog.open();
+    }
+
+    protected void updateContent() {
+        orderedList.removeAll();
 
         List<ParkingLot> parkingLots = parkingLotService.list();
         for (ParkingLot lot : parkingLots) {
-            add(new ParkingTemplateViewCard(lot));
+            orderedList.add(new ParkingTemplateViewCard(this, lot));
         }
+    }
+
+    protected void onEdit(ParkingLot parkingLot) {
+        parkingForm.setParkingLot(parkingLot);
+        dialog.open();
+    }
+
+    protected void onDelete(ParkingLot parkingLot) {
+        parkingLotService.delete(parkingLot);
+        updateContent();
     }
 
 }

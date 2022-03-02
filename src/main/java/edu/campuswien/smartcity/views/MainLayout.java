@@ -125,7 +125,6 @@ public class MainLayout extends AppLayout {
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
                 new MenuItemInfo("Parking Template", "la la-parking", ParkingTemplateView.class), //
-                new MenuItemInfo("Parking Config", "la la-parking", ParkingFormView.class), //
                 new MenuItemInfo("About", "la la-file", AboutView.class), //
 
         };
