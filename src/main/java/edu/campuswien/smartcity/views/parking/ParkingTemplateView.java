@@ -10,14 +10,12 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.template.Id;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.*;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
 import edu.campuswien.smartcity.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -26,7 +24,9 @@ import java.util.List;
 @Tag("parking-template-view")
 @JsModule("./views/parking/parking-template-view.ts")
 @Uses(Icon.class)
-public class ParkingTemplateView extends LitTemplate implements HasComponents, HasStyle {
+public class ParkingTemplateView extends LitTemplate implements HasComponents, HasStyle{
+    private static final long serialVersionUID = -15321095775433453L;
+
     private ParkingLotService parkingLotService;
     private ParkingSpotService parkingSpotService;
 
@@ -37,7 +37,7 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
     @Id("itemList")
     private OrderedList orderedList;
 
-    private Dialog dialog = new Dialog();
+    private Dialog templateDialog = new Dialog();
     private ParkingFormView parkingForm;
 
     @Autowired
@@ -53,10 +53,10 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
         btnAdd.setIconAfterText(true);
         btnImport.setIconAfterText(true);
 
-        dialog.getElement().setAttribute("aria-label", "Create new employee");
-        parkingForm = new ParkingFormView(this, dialog, parkingLotService);
+        templateDialog.getElement().setAttribute("aria-label", "Create new employee");
+        parkingForm = new ParkingFormView(this, templateDialog, parkingLotService);
         parkingForm.setParkingLot(null);
-        dialog.add(parkingForm);
+        templateDialog.add(parkingForm);
 
         //Add listener
         btnAdd.addClickListener(e -> onAdd());
@@ -66,7 +66,7 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
 
     private void onAdd() {
         parkingForm.setParkingLot(new ParkingLot());
-        dialog.open();
+        templateDialog.open();
     }
 
     protected void updateContent() {
@@ -80,7 +80,7 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
 
     protected void onEdit(ParkingLot parkingLot) {
         parkingForm.setParkingLot(parkingLot);
-        dialog.open();
+        templateDialog.open();
     }
 
     protected void onDelete(ParkingLot parkingLot) {
@@ -89,6 +89,7 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
     }
 
     protected void onShowSpots(ParkingLot parkingLot) {
+        UI.getCurrent().navigate(ParkingSpotsView.class, new RouteParameters("parkingId", parkingLot.getId().toString()));
     }
 
     protected void onDuplicate(ParkingLot parkingLot) {

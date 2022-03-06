@@ -47,5 +47,9 @@ public class ParkingTemplateViewCard extends LitTemplate {
         delete.addClickListener(e -> mainView.onDelete(parkingLot));
         duplicate.addClickListener(e -> mainView.onDuplicate(parkingLot));
         spotList.addClickListener(e -> mainView.onShowSpots(parkingLot));
+
+        if(parkingLot.getSpots().isEmpty()) {
+            spotList.setVisible(false);
+        }
     }
 }

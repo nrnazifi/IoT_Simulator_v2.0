@@ -9,26 +9,22 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
 import edu.campuswien.smartcity.data.entity.ParkingSpot;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
-import edu.campuswien.smartcity.views.MainLayout;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@PageTitle("Parking lot template")
-@Route(value = "parking-form", layout = MainLayout.class)
 @Tag("parking-form-view")
 @JsModule("./views/parking/parking-form-view.ts")
 @Uses(Icon.class)
@@ -82,6 +78,7 @@ public class ParkingFormView extends LitTemplate {
         btnSave.addClickListener(e -> saveForm());
         btnDelete.addClickListener(e -> delete());
         btnGenerate.addClickListener(e -> generateSpots());
+        btnShowSpots.addClickListener(e -> showSpots());
     }
 
     public void setParkingLot(ParkingLot parkingLot) {
@@ -124,7 +121,8 @@ public class ParkingFormView extends LitTemplate {
 
         closeForm();
         mainView.updateContent();
-        Notification.show(parkingLot.getName() + " is stored!");
+        Notification notification = Notification.show(parkingLot.getName() + " is stored!", 5000, Notification.Position.TOP_CENTER);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
     }
 
     private void delete() {
@@ -133,7 +131,7 @@ public class ParkingFormView extends LitTemplate {
 
         closeForm();
         mainView.updateContent();
-        Notification.show(parkingLot.getName() + " is deleted!");
+        Notification.show(parkingLot.getName() + " is deleted!", 5000, Notification.Position.TOP_CENTER);
     }
 
     private void generateSpots() {
@@ -160,11 +158,18 @@ public class ParkingFormView extends LitTemplate {
 
         //parkingLot = parkingLotService.get(parkingLot.getId()).get();
         mainView.updateContent();
-        Notification.show("Spots of the " + parkingLot.getName() + " are generated!");
+        Notification notification = Notification.show("Spots of the " + parkingLot.getName() + " are generated!", 5000, Notification.Position.TOP_CENTER);
+        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         btnShowSpots.setEnabled(true);
         btnGenerate.setEnabled(false);
     }
 
-
+    private void showSpots() {
+        ParkingLot parkingLot = binder.getBean();
+        if(parkingLot.getId() != null) {
+            closeForm();
+            mainView.onShowSpots(parkingLot);
+        }
+    }
 
 }
