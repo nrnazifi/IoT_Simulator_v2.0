@@ -18,10 +18,14 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
+import edu.campuswien.smartcity.data.entity.ParkingSpot;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
+import edu.campuswien.smartcity.data.service.ParkingSpotService;
 import edu.campuswien.smartcity.views.MainLayout;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @PageTitle("Parking lot template")
 @Route(value = "parking-form", layout = MainLayout.class)
@@ -77,6 +81,7 @@ public class ParkingFormView extends LitTemplate {
         btnCancel.addClickListener(e -> closeForm());
         btnSave.addClickListener(e -> saveForm());
         btnDelete.addClickListener(e -> delete());
+        btnGenerate.addClickListener(e -> generateSpots());
     }
 
     public void setParkingLot(ParkingLot parkingLot) {
@@ -130,4 +135,36 @@ public class ParkingFormView extends LitTemplate {
         mainView.updateContent();
         Notification.show(parkingLot.getName() + " is deleted!");
     }
+
+    private void generateSpots() {
+        ParkingSpotService parkingSpotService = mainView.getParkingSpotService();
+        ParkingLot parkingLot = binder.getBean();
+
+        if(!parkingLot.getSpots().isEmpty()) {
+            parkingLot.getSpots().clear();
+            parkingLotService.update(parkingLot);
+        }
+
+        String name = parkingLot.getName();
+        List<ParkingSpot> spots = new ArrayList<ParkingSpot>();
+        for(long i = parkingLot.getStartId(); i < parkingLot.getCapacity() + parkingLot.getStartId(); i++) {
+            ParkingSpot spot = new ParkingSpot();
+            spot.setParkingLot(parkingLot);
+            spot.setDeviceId(name+ "_" +i);
+            spots.add(spot);
+            parkingSpotService.update(spot);
+        }
+        parkingLot.getSpots().addAll(spots);
+        parkingLot.setLastUpdatedTime(LocalDateTime.now());
+        //parkingLotService.update(parkingLot);
+
+        //parkingLot = parkingLotService.get(parkingLot.getId()).get();
+        mainView.updateContent();
+        Notification.show("Spots of the " + parkingLot.getName() + " are generated!");
+        btnShowSpots.setEnabled(true);
+        btnGenerate.setEnabled(false);
+    }
+
+
+
 }

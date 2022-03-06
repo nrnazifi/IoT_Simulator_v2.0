@@ -5,11 +5,11 @@ import edu.campuswien.smartcity.data.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.vaadin.artur.helpers.CrudService;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class ParkingLotService extends CrudService<ParkingLot, Long> {
@@ -29,6 +29,7 @@ public class ParkingLotService extends CrudService<ParkingLot, Long> {
     }
 
     @Override
+    @Transactional
     public ParkingLot update(ParkingLot entity) {
         if(entity.getLastUpdatedTime() != null) {
             entity.setLastUpdatedTime(LocalDateTime.now());
@@ -40,7 +41,7 @@ public class ParkingLotService extends CrudService<ParkingLot, Long> {
             entity.setNumberOfOccupiedAtStart(0);
         }
 
-        return this.getRepository().save(entity);
+        return this.getRepository().saveAndFlush(entity);
     }
 
     public void delete(ParkingLot entity) {

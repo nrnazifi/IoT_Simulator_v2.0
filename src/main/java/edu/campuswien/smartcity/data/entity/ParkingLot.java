@@ -40,6 +40,6 @@ public class ParkingLot extends AbstractEntity {
     @Column
     private LocalDateTime lastUpdatedTime;
 
-    @OneToMany(mappedBy = "parkingLot", targetEntity = ParkingSpot.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "parkingLot", targetEntity = ParkingSpot.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpot> spots;
 }

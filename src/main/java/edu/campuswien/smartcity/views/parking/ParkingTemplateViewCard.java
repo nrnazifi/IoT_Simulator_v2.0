@@ -2,7 +2,6 @@ package edu.campuswien.smartcity.views.parking;
 
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
@@ -44,13 +43,9 @@ public class ParkingTemplateViewCard extends LitTemplate {
         this.subtitle.setText(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL).format(parkingLot.getLastUpdatedTime()));
         this.text.setText(parkingLot.getDescription());
 
-//        this.delete.setSHref("/delete");
-//        this.edit.setHref("/parking-form");
-//        this.duplicate.setHref("/duplicate");
-//        this.export.setHref("/export");
-//        this.spotList.setHref("/spotList");
-
         edit.addClickListener(e -> mainView.onEdit(parkingLot));
         delete.addClickListener(e -> mainView.onDelete(parkingLot));
+        duplicate.addClickListener(e -> mainView.onDuplicate(parkingLot));
+        spotList.addClickListener(e -> mainView.onShowSpots(parkingLot));
     }
 }

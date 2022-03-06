@@ -14,7 +14,7 @@ public class ParkingSpot extends AbstractEntity {
     // generated name as
     private String deviceId;
 
-    @ManyToOne
-    @JoinColumn()
+    @ManyToOne(optional = false)
+    @JoinColumn(nullable = true)
     private ParkingLot parkingLot;
 }

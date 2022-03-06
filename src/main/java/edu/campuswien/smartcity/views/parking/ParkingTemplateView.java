@@ -9,14 +9,15 @@ import com.vaadin.flow.component.html.OrderedList;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.littemplate.LitTemplate;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
+import edu.campuswien.smartcity.data.service.ParkingSpotService;
 import edu.campuswien.smartcity.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ import java.util.List;
 @Uses(Icon.class)
 public class ParkingTemplateView extends LitTemplate implements HasComponents, HasStyle {
     private ParkingLotService parkingLotService;
+    private ParkingSpotService parkingSpotService;
 
     @Id("btnAdd")
     private Button btnAdd;
@@ -38,8 +40,10 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
     private Dialog dialog = new Dialog();
     private ParkingFormView parkingForm;
 
-    public ParkingTemplateView(@Autowired ParkingLotService parkingLotService) {
+    @Autowired
+    public ParkingTemplateView(ParkingLotService parkingLotService, ParkingSpotService parkingSpotService) {
         this.parkingLotService = parkingLotService;
+        this.parkingSpotService = parkingSpotService;
 
         addClassNames("parking-template-view", "flex", "flex-col", "h-full");
         //Set icons
@@ -82,6 +86,16 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
     protected void onDelete(ParkingLot parkingLot) {
         parkingLotService.delete(parkingLot);
         updateContent();
+    }
+
+    protected void onShowSpots(ParkingLot parkingLot) {
+    }
+
+    protected void onDuplicate(ParkingLot parkingLot) {
+    }
+
+    protected ParkingSpotService getParkingSpotService() {
+        return parkingSpotService;
     }
 
 }
