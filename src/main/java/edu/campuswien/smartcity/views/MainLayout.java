@@ -21,6 +21,7 @@ import com.vaadin.flow.theme.Theme;
 import edu.campuswien.smartcity.views.about.AboutView;
 import edu.campuswien.smartcity.views.parking.ParkingFormView;
 import edu.campuswien.smartcity.views.parking.ParkingTemplateView;
+import edu.campuswien.smartcity.views.simulation.SimulationView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -124,8 +125,10 @@ public class MainLayout extends AppLayout {
 
     private MenuItemInfo[] createMenuItems() {
         return new MenuItemInfo[]{ //
-                new MenuItemInfo("Parking Template", "la la-parking", ParkingTemplateView.class), //
-                new MenuItemInfo("About", "la la-file", AboutView.class), //
+                new MenuItemInfo("Parking Template", "la la-microchip", ParkingTemplateView.class), //
+                new MenuItemInfo("Simulation", "la la-cube", SimulationView.class), //
+                new MenuItemInfo("Charts", "la la-chart-bar", AboutView.class), //
+                new MenuItemInfo("About", "la la-info", AboutView.class), //
 
         };
     }

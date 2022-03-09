@@ -53,7 +53,7 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
         btnAdd.setIconAfterText(true);
         btnImport.setIconAfterText(true);
 
-        templateDialog.getElement().setAttribute("aria-label", "Create new employee");
+        templateDialog.getElement().setAttribute("aria-label", "Create new parking lot");
         parkingForm = new ParkingFormView(this, templateDialog, parkingLotService);
         parkingForm.setParkingLot(null);
         templateDialog.add(parkingForm);
