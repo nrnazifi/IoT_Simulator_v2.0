@@ -12,7 +12,7 @@
     box-shadow: var(--lumo-box-shadow-s);
 }
 
-.panel-footer {
+:host(parking-template-view) .panel-footer {
     position: relative;
     padding: 8px 0px;
     border-bottom-right-radius: 3px;
@@ -20,7 +20,7 @@
     border-top: 1px solid #ddd;
 }
 
-.panel-footer iron-icon {
+:host(parking-template-view) .panel-footer iron-icon {
     width: var(--lumo-icon-size-s);
     height: var(--lumo-icon-size-s);
 }

@@ -22,6 +22,8 @@ public class Simulation extends AbstractEntity {
     @Column
     private String description;
 
+    @Column(columnDefinition = "boolean default true")
+    private boolean scheduleNow = true;
     @Column
     private LocalDateTime scheduleTime;
 
@@ -33,6 +35,23 @@ public class Simulation extends AbstractEntity {
 
     @Column(columnDefinition = "double default 1.0")
     private double timeUnit = 1.0;
+
+    @Column(columnDefinition = "boolean default true")
+    private boolean onDatabase = true;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean onServer = false;
+
+    @Column
+    private String endpointUri;
+
+    @Enumerated
+    @Column(columnDefinition = "smallint")
+    private ProtocolEnum protocol;
+
+    @Enumerated
+    @Column(columnDefinition = "smallint")
+    private DataFormatEnum dataFormat;
 
     @OneToMany(mappedBy = "simulation", targetEntity = ParkingLog.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<ParkingLog> logs;

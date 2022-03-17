@@ -1,0 +1,10 @@
+#storageDetails > * {
+    width: 50%;
+}
+#storageDetails>div {
+    width: 100%;
+}
+
+.text-error {
+    color: var(--lumo-error-text-color);
+}
