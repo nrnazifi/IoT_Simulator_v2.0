@@ -40,6 +40,14 @@ public class ParkingLot extends AbstractEntity {
     @Column
     private LocalDateTime lastUpdatedTime;
 
+    @OneToOne(optional = false)
+    @JoinColumn(nullable = true)
+    private TimeBasedData howLongParked;
+
+    @OneToOne(optional = false)
+    @JoinColumn(nullable = true)
+    private TimeBasedData howManyChanged;
+
     @OneToMany(mappedBy = "parkingLot", targetEntity = ParkingSpot.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpot> spots;
 }

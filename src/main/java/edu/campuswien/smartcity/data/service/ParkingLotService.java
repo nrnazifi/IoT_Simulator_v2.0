@@ -15,6 +15,7 @@ import java.util.List;
 public class ParkingLotService extends CrudService<ParkingLot, Long> {
 
     private ParkingLotRepository repository;
+
     public ParkingLotService(@Autowired ParkingLotRepository repository) {
         this.repository = repository;
     }
@@ -29,7 +30,6 @@ public class ParkingLotService extends CrudService<ParkingLot, Long> {
     }
 
     @Override
-    @Transactional
     public ParkingLot update(ParkingLot entity) {
         if(entity.getLastUpdatedTime() != null) {
             entity.setLastUpdatedTime(LocalDateTime.now());

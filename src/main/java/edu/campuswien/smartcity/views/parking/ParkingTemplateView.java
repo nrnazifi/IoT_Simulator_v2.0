@@ -14,6 +14,7 @@ import com.vaadin.flow.router.*;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
+import edu.campuswien.smartcity.data.service.TimeBasedDataService;
 import edu.campuswien.smartcity.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -29,6 +30,7 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
 
     private ParkingLotService parkingLotService;
     private ParkingSpotService parkingSpotService;
+    private TimeBasedDataService timeBasedDataService;
 
     @Id("btnAdd")
     private Button btnAdd;
@@ -41,9 +43,10 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
     private ParkingFormView parkingForm;
 
     @Autowired
-    public ParkingTemplateView(ParkingLotService parkingLotService, ParkingSpotService parkingSpotService) {
+    public ParkingTemplateView(ParkingLotService parkingLotService, ParkingSpotService parkingSpotService, TimeBasedDataService timeBasedDataService) {
         this.parkingLotService = parkingLotService;
         this.parkingSpotService = parkingSpotService;
+        this.timeBasedDataService = timeBasedDataService;
 
         addClassNames("parking-template-view", "flex", "flex-col", "h-full");
         //Set icons
@@ -97,6 +100,10 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
 
     protected ParkingSpotService getParkingSpotService() {
         return parkingSpotService;
+    }
+
+    protected TimeBasedDataService getTimeBasedDataService() {
+        return timeBasedDataService;
     }
 
 }

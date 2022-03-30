@@ -121,7 +121,7 @@ public class SimulationFormView extends LitTemplate {
         protocolRadio.setItems(ProtocolEnum.values());
         dataFormatRadio.setItems(DataFormatEnum.values());
 
-        timeUnit.addValueChangeListener(e -> calculateTimeUnit(e.getValue()));
+        timeUnit.addValueChangeListener(e -> calculateAndShowTimeUnit(e.getValue()));
     }
 
     public void setSimulation(Simulation simulation) {
@@ -204,7 +204,7 @@ public class SimulationFormView extends LitTemplate {
         Notification.show(simulation.getName() + " is deleted!", 5000, Notification.Position.TOP_CENTER);
     }
 
-    private void calculateTimeUnit(Double value) {
+    private void calculateAndShowTimeUnit(Double value) {
         if(value == null) return;
 
         if (value <= 0 || value > 100) {
