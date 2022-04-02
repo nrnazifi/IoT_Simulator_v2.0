@@ -1,23 +1,27 @@
 package edu.campuswien.smartcity.data.service;
 
 import edu.campuswien.smartcity.data.entity.ParkingLot;
+import edu.campuswien.smartcity.data.entity.TimeBasedData;
 import edu.campuswien.smartcity.data.repository.ParkingLotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.vaadin.artur.helpers.CrudService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ParkingLotService extends CrudService<ParkingLot, Long> {
 
-    private ParkingLotRepository repository;
+    private final ParkingLotRepository repository;
+    private final TimeBasedDataService timeBasedDataService;
 
-    public ParkingLotService(@Autowired ParkingLotRepository repository) {
+    @Autowired
+    public ParkingLotService(ParkingLotRepository repository, TimeBasedDataService timeBasedDataService) {
         this.repository = repository;
+        this.timeBasedDataService = timeBasedDataService;
     }
 
     @Override
@@ -46,5 +50,25 @@ public class ParkingLotService extends CrudService<ParkingLot, Long> {
 
     public void delete(ParkingLot entity) {
         this.getRepository().deleteById(entity.getId());
+    }
+
+    public List<TimeBasedData> findAllTimeBased4Occupied(ParkingLot parkingLot) {
+        if(parkingLot.getId() == null) {
+            return new ArrayList<>();
+        }
+
+        return timeBasedDataService.findAllByParentIdAndParentFieldName(parkingLot.getId(), ParkingLot.FIELD_NAME_HOW_LONG_PARKED);
+    }
+
+    public List<TimeBasedData> findAllTimeBased4Request(ParkingLot parkingLot) {
+        if(parkingLot.getId() == null) {
+            return new ArrayList<>();
+        }
+
+        return timeBasedDataService.findAllByParentIdAndParentFieldName(parkingLot.getId(), ParkingLot.FIELD_NAME_HOW_MANY_CHANGED);
+    }
+
+    public boolean removeAllTimeBasedData(ParkingLot parkingLot) {
+        return timeBasedDataService.removeAll(parkingLot);
     }
 }

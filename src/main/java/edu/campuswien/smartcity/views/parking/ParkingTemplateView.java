@@ -28,9 +28,9 @@ import java.util.List;
 public class ParkingTemplateView extends LitTemplate implements HasComponents, HasStyle{
     private static final long serialVersionUID = -15321095775433453L;
 
-    private ParkingLotService parkingLotService;
-    private ParkingSpotService parkingSpotService;
-    private TimeBasedDataService timeBasedDataService;
+    private final ParkingLotService parkingLotService;
+    private final ParkingSpotService parkingSpotService;
+    private final TimeBasedDataService timeBasedDataService;
 
     @Id("btnAdd")
     private Button btnAdd;

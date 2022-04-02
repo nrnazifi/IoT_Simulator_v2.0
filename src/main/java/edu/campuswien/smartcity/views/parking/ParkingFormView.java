@@ -1,6 +1,7 @@
 package edu.campuswien.smartcity.views.parking;
 
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.Uses;
@@ -18,12 +19,11 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
-import edu.campuswien.smartcity.data.entity.ParkingLot;
-import edu.campuswien.smartcity.data.entity.ParkingSpot;
-import edu.campuswien.smartcity.data.entity.TimeBasedData;
-import edu.campuswien.smartcity.data.entity.TimeTypeEnum;
+import edu.campuswien.smartcity.component.TimeDayNightField;
+import edu.campuswien.smartcity.data.entity.*;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
+import edu.campuswien.smartcity.data.service.TimeBasedDataService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,6 +34,8 @@ import java.util.List;
 @Uses(Icon.class)
 public class ParkingFormView extends LitTemplate {
     private static final long serialVersionUID = -8065584460817633835L;
+    public static final String PREFIX_OCCUPIED_ID = "occupied_";
+    public static final String PREFIX_REQUEST_ID = "request_";
 
     // Main fields
     @Id("name")
@@ -50,112 +52,26 @@ public class ParkingFormView extends LitTemplate {
     // Average of occupied
     // How long does each vehicle stay in the parking lot on average?
     @Id("occupiedRadio")
-    private RadioButtonGroup<TimeTypeEnum> occupiedRadio;
+    private RadioButtonGroup<DayCategoryEnum> occupiedRadio;
     @Id("generallyOccupiedDetail")
     private Span generallyOccupiedDetail;
     @Id("workRestTimeOccupiedDetail")
     private Span workRestTimeOccupiedDetail;
     @Id("weekdaysOccupiedDetail")
     private Span weekdaysOccupiedDetail;
-    @Id("averageOccupied_day")
-    private IntegerField averageOccupiedDay;
-    @Id("averageOccupied_night")
-    private IntegerField averageOccupiedNight;
-    @Id("workdayOccupied_day")
-    private IntegerField workdayOccupiedDay;
-    @Id("workdayOccupied_night")
-    private IntegerField workdayOccupiedNight;
-    @Id("weekendOccupied_day")
-    private IntegerField weekendOccupiedDay;
-    @Id("weekendOccupied_night")
-    private IntegerField weekendOccupiedNight;
-    @Id("holidayOccupied_day")
-    private IntegerField holidayOccupiedDay;
-    @Id("holidayOccupied_night")
-    private IntegerField holidayOccupiedNight;
-    @Id("mondayOccupied_day")
-    private IntegerField mondayOccupiedDay;
-    @Id("mondayOccupied_night")
-    private IntegerField mondayOccupiedNight;
-    @Id("tuesdayOccupied_day")
-    private IntegerField tuesdayOccupiedDay;
-    @Id("tuesdayOccupied_night")
-    private IntegerField tuesdayOccupiedNight;
-    @Id("wednesdayOccupied_day")
-    private IntegerField wednesdayOccupiedDay;
-    @Id("wednesdayOccupied_night")
-    private IntegerField wednesdayOccupiedNight;
-    @Id("thursdayOccupied_day")
-    private IntegerField thursdayOccupiedDay;
-    @Id("thursdayOccupied_night")
-    private IntegerField thursdayOccupiedNight;
-    @Id("fridayOccupied_day")
-    private IntegerField fridayOccupiedDay;
-    @Id("fridayOccupied_night")
-    private IntegerField fridayOccupiedNight;
-    @Id("saturdayOccupied_day")
-    private IntegerField saturdayOccupiedDay;
-    @Id("saturdayOccupied_night")
-    private IntegerField saturdayOccupiedNight;
-    @Id("sundayOccupied_day")
-    private IntegerField sundayOccupiedDay;
-    @Id("sundayOccupied_night")
-    private IntegerField sundayOccupiedNight;
+    private List<TimeDayNightField> occupiedFields;
 
     // Average of requests
     // How many spot statuses are changed in each period on average?
     @Id("requestRadio")
-    private RadioButtonGroup<TimeTypeEnum> requestRadio;
+    private RadioButtonGroup<DayCategoryEnum> requestRadio;
     @Id("generallyRequestDetail")
     private Span generallyRequestDetail;
     @Id("workRestTimeRequestDetail")
     private Span workRestTimeRequestDetail;
     @Id("weekdaysRequestDetail")
     private Span weekdaysRequestDetail;
-    @Id("averageRequest_day")
-    private IntegerField averageRequestDay;
-    @Id("averageRequest_night")
-    private IntegerField averageRequestNight;
-    @Id("workdayRequest_day")
-    private IntegerField workdayRequestDay;
-    @Id("workdayRequest_night")
-    private IntegerField workdayRequestNight;
-    @Id("weekendRequest_day")
-    private IntegerField weekendRequestDay;
-    @Id("weekendRequest_night")
-    private IntegerField weekendRequestNight;
-    @Id("holidayRequest_day")
-    private IntegerField holidayRequestDay;
-    @Id("holidayRequest_night")
-    private IntegerField holidayRequestNight;
-    @Id("mondayRequest_day")
-    private IntegerField mondayRequestDay;
-    @Id("mondayRequest_night")
-    private IntegerField mondayRequestNight;
-    @Id("tuesdayRequest_day")
-    private IntegerField tuesdayRequestDay;
-    @Id("tuesdayRequest_night")
-    private IntegerField tuesdayRequestNight;
-    @Id("wednesdayRequest_day")
-    private IntegerField wednesdayRequestDay;
-    @Id("wednesdayRequest_night")
-    private IntegerField wednesdayRequestNight;
-    @Id("thursdayRequest_day")
-    private IntegerField thursdayRequestDay;
-    @Id("thursdayRequest_night")
-    private IntegerField thursdayRequestNight;
-    @Id("fridayRequest_day")
-    private IntegerField fridayRequestDay;
-    @Id("fridayRequest_night")
-    private IntegerField fridayRequestNight;
-    @Id("saturdayRequest_day")
-    private IntegerField saturdayRequestDay;
-    @Id("saturdayRequest_night")
-    private IntegerField saturdayRequestNight;
-    @Id("sundayRequest_day")
-    private IntegerField sundayRequestDay;
-    @Id("sundayRequest_night")
-    private IntegerField sundayRequestNight;
+    private List<TimeDayNightField> requestFields;
 
     // Buttons
     @Id("btnSave")
@@ -169,10 +85,10 @@ public class ParkingFormView extends LitTemplate {
     @Id("btnShowSpots")
     private Button btnShowSpots;
 
-    private Binder<ParkingLot> binder = new BeanValidationBinder<>(ParkingLot.class);
-    private ParkingLotService parkingLotService;
-    private ParkingTemplateView mainView;
-    private Dialog dialog;
+    private final Binder<ParkingLot> binder = new BeanValidationBinder<>(ParkingLot.class);
+    private final ParkingLotService parkingLotService;
+    private final ParkingTemplateView mainView;
+    private final Dialog dialog;
 
     public ParkingFormView(ParkingTemplateView mainView, Dialog dialog, ParkingLotService parkingLotService) {
         this.mainView = mainView;
@@ -207,48 +123,42 @@ public class ParkingFormView extends LitTemplate {
         weekdaysOccupiedDetail.setVisible(false);
         workRestTimeOccupiedDetail.setVisible(false);
 
-        occupiedRadio.setItems(TimeTypeEnum.values());
-        occupiedRadio.setValue(TimeTypeEnum.Generally);
+        occupiedRadio.setItems(DayCategoryEnum.values());
+        occupiedRadio.setValue(DayCategoryEnum.Generally);
         occupiedRadio.addValueChangeListener(e -> {
-            if(e.getValue().equals(TimeTypeEnum.Generally)) {
+            if(e.getValue().equals(DayCategoryEnum.Generally)) {
                 generallyOccupiedDetail.setVisible(true);
                 weekdaysOccupiedDetail.setVisible(false);
                 workRestTimeOccupiedDetail.setVisible(false);
-            } else if(e.getValue().equals(TimeTypeEnum.WeekDays)) {
+            } else if(e.getValue().equals(DayCategoryEnum.WeekDays)) {
                 generallyOccupiedDetail.setVisible(false);
                 weekdaysOccupiedDetail.setVisible(true);
                 workRestTimeOccupiedDetail.setVisible(false);
-            } else if(e.getValue().equals(TimeTypeEnum.WorkRestTime)) {
+            } else if(e.getValue().equals(DayCategoryEnum.WorkRestTime)) {
                 generallyOccupiedDetail.setVisible(false);
                 weekdaysOccupiedDetail.setVisible(false);
                 workRestTimeOccupiedDetail.setVisible(true);
             }
         });
 
-        averageOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        averageOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-
-        weekendOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        weekendOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-        workdayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        workdayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-        holidayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        holidayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-
-        mondayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        mondayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-        tuesdayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        tuesdayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-        wednesdayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        wednesdayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-        thursdayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        thursdayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-        fridayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        fridayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-        saturdayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        saturdayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
-        sundayOccupiedDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        sundayOccupiedNight.setPrefixComponent(VaadinIcon.MOON.create());
+        occupiedFields = new ArrayList<>();
+        for (DayTypeEnum timeType : DayTypeEnum.values()) {
+            TimeDayNightField field = new TimeDayNightField(PREFIX_OCCUPIED_ID + timeType.getName(), timeType);
+            occupiedFields.add(field);
+            if(timeType.getCategory().equals(DayCategoryEnum.Generally)) {
+                generallyOccupiedDetail.add(field);
+            } else if(timeType.getCategory().equals(DayCategoryEnum.WorkRestTime)) {
+                if(workRestTimeOccupiedDetail.getChildren().count() > 0) {
+                    workRestTimeOccupiedDetail.add(new Text("–"));
+                }
+                workRestTimeOccupiedDetail.add(field);
+            } else if(timeType.getCategory().equals(DayCategoryEnum.WeekDays)) {
+                if(weekdaysOccupiedDetail.getChildren().count() > 0) {
+                    weekdaysOccupiedDetail.add(new Text("–"));
+                }
+                weekdaysOccupiedDetail.add(field);
+            }
+        }
     }
 
     private void createRequestDetails() {
@@ -256,48 +166,42 @@ public class ParkingFormView extends LitTemplate {
         weekdaysRequestDetail.setVisible(false);
         workRestTimeRequestDetail.setVisible(false);
 
-        requestRadio.setItems(TimeTypeEnum.values());
-        requestRadio.setValue(TimeTypeEnum.Generally);
+        requestRadio.setItems(DayCategoryEnum.values());
+        requestRadio.setValue(DayCategoryEnum.Generally);
         requestRadio.addValueChangeListener(e -> {
-            if(e.getValue().equals(TimeTypeEnum.Generally)) {
+            if(e.getValue().equals(DayCategoryEnum.Generally)) {
                 generallyRequestDetail.setVisible(true);
                 weekdaysRequestDetail.setVisible(false);
                 workRestTimeRequestDetail.setVisible(false);
-            } else if(e.getValue().equals(TimeTypeEnum.WeekDays)) {
+            } else if(e.getValue().equals(DayCategoryEnum.WeekDays)) {
                 generallyRequestDetail.setVisible(false);
                 weekdaysRequestDetail.setVisible(true);
                 workRestTimeRequestDetail.setVisible(false);
-            } else if(e.getValue().equals(TimeTypeEnum.WorkRestTime)) {
+            } else if(e.getValue().equals(DayCategoryEnum.WorkRestTime)) {
                 generallyRequestDetail.setVisible(false);
                 weekdaysRequestDetail.setVisible(false);
                 workRestTimeRequestDetail.setVisible(true);
             }
         });
 
-        averageRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        averageRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-
-        weekendRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        weekendRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-        workdayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        workdayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-        holidayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        holidayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-
-        mondayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        mondayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-        tuesdayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        tuesdayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-        wednesdayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        wednesdayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-        thursdayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        thursdayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-        fridayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        fridayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-        saturdayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        saturdayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
-        sundayRequestDay.setPrefixComponent(VaadinIcon.SUN_O.create());
-        sundayRequestNight.setPrefixComponent(VaadinIcon.MOON.create());
+        requestFields = new ArrayList<>();
+        for (DayTypeEnum timeType : DayTypeEnum.values()) {
+            TimeDayNightField field = new TimeDayNightField(PREFIX_REQUEST_ID + timeType.getName(), timeType);
+            requestFields.add(field);
+            if(timeType.getCategory().equals(DayCategoryEnum.Generally)) {
+                generallyRequestDetail.add(field);
+            } else if(timeType.getCategory().equals(DayCategoryEnum.WorkRestTime)) {
+                if(workRestTimeRequestDetail.getChildren().count() > 0) {
+                    workRestTimeRequestDetail.add(new Text("–"));
+                }
+                workRestTimeRequestDetail.add(field);
+            } else if(timeType.getCategory().equals(DayCategoryEnum.WeekDays)) {
+                if(weekdaysRequestDetail.getChildren().count() > 0) {
+                    weekdaysRequestDetail.add(new Text("–"));
+                }
+                weekdaysRequestDetail.add(field);
+            }
+        }
     }
 
     public void setParkingLot(ParkingLot parkingLot) {
@@ -331,67 +235,45 @@ public class ParkingFormView extends LitTemplate {
     }
 
     private void setOccupiedDetails(ParkingLot parkingLot) {
-        if (parkingLot.getHowLongParked() != null) {
-            TimeBasedData occupied = parkingLot.getHowLongParked();
-            occupiedRadio.setValue(occupied.getTimeType());
-
-            averageOccupiedDay.setValue(occupied.getAverageDay());
-            averageOccupiedNight.setValue(occupied.getAverageNight());
-
-            weekendOccupiedDay.setValue(occupied.getWeekendDay());
-            weekendOccupiedNight.setValue(occupied.getWeekendNight());
-            workdayOccupiedDay.setValue(occupied.getWorkdayDay());
-            workdayOccupiedNight.setValue(occupied.getWorkdayNight());
-            holidayOccupiedDay.setValue(occupied.getHolidayDay());
-            holidayOccupiedNight.setValue(occupied.getHolidayNight());
-
-            mondayOccupiedDay.setValue(occupied.getMondayDay());
-            mondayOccupiedNight.setValue(occupied.getMondayNight());
-            tuesdayOccupiedDay.setValue(occupied.getTuesdayDay());
-            tuesdayOccupiedNight.setValue(occupied.getTuesdayNight());
-            wednesdayOccupiedDay.setValue(occupied.getWednesdayDay());
-            wednesdayOccupiedNight.setValue(occupied.getWednesdayNight());
-            thursdayOccupiedDay.setValue(occupied.getThursdayDay());
-            thursdayOccupiedNight.setValue(occupied.getThursdayNight());
-            fridayOccupiedDay.setValue(occupied.getFridayDay());
-            fridayOccupiedNight.setValue(occupied.getFridayNight());
-            saturdayOccupiedDay.setValue(occupied.getSaturdayDay());
-            saturdayOccupiedNight.setValue(occupied.getSaturdayNight());
-            sundayOccupiedDay.setValue(occupied.getSundayDay());
-            sundayOccupiedNight.setValue(occupied.getSundayNight());
+        List<TimeBasedData> howLongParked = parkingLotService.findAllTimeBased4Occupied(parkingLot);
+        if (howLongParked == null) {
+            howLongParked = new ArrayList<>();
         }
+
+        DayCategoryEnum category = setDetailsFields(occupiedFields, howLongParked, PREFIX_OCCUPIED_ID);
+        occupiedRadio.setValue(category);
     }
 
     private void setRequestDetails(ParkingLot parkingLot) {
-        if (parkingLot.getHowManyChanged() != null) {
-            TimeBasedData request = parkingLot.getHowManyChanged();
-            requestRadio.setValue(request.getTimeType());
-
-            averageRequestDay.setValue(request.getAverageDay());
-            averageRequestNight.setValue(request.getAverageNight());
-
-            weekendRequestDay.setValue(request.getWeekendDay());
-            weekendRequestNight.setValue(request.getWeekendNight());
-            workdayRequestDay.setValue(request.getWorkdayDay());
-            workdayRequestNight.setValue(request.getWorkdayNight());
-            holidayRequestDay.setValue(request.getHolidayDay());
-            holidayRequestNight.setValue(request.getHolidayNight());
-
-            mondayRequestDay.setValue(request.getMondayDay());
-            mondayRequestNight.setValue(request.getMondayNight());
-            tuesdayRequestDay.setValue(request.getTuesdayDay());
-            tuesdayRequestNight.setValue(request.getTuesdayNight());
-            wednesdayRequestDay.setValue(request.getWednesdayDay());
-            wednesdayRequestNight.setValue(request.getWednesdayNight());
-            thursdayRequestDay.setValue(request.getThursdayDay());
-            thursdayRequestNight.setValue(request.getThursdayNight());
-            fridayRequestDay.setValue(request.getFridayDay());
-            fridayRequestNight.setValue(request.getFridayNight());
-            saturdayRequestDay.setValue(request.getSaturdayDay());
-            saturdayRequestNight.setValue(request.getSaturdayNight());
-            sundayRequestDay.setValue(request.getSundayDay());
-            sundayRequestNight.setValue(request.getSundayNight());
+        List<TimeBasedData> howManyChanged = parkingLotService.findAllTimeBased4Request(parkingLot);
+        if (howManyChanged == null) {
+            howManyChanged = new ArrayList<>();
         }
+
+        DayCategoryEnum category = setDetailsFields(requestFields, howManyChanged, PREFIX_REQUEST_ID);
+        requestRadio.setValue(category);
+    }
+
+    private DayCategoryEnum setDetailsFields(List<TimeDayNightField> fields, List<TimeBasedData> tableTimes, String prefixId) {
+        DayCategoryEnum category = DayCategoryEnum.Generally;
+
+        for (TimeDayNightField field : fields) {
+            boolean exist = false;
+            for (TimeBasedData time : tableTimes) {
+                if (field.getId().get().equals(prefixId + time.getDayType().getName())) {
+                    category = time.getDayType().getCategory();
+                    field.getDay().setValue(time.getValueDay());
+                    field.getNight().setValue(time.getValueNight());
+                    exist = true;
+                    break;
+                }
+            }
+            if(!exist) {
+                field.getDay().setValue(null);
+                field.getNight().setValue(null);
+            }
+        }
+        return category;
     }
 
     private void closeForm() {
@@ -402,9 +284,10 @@ public class ParkingFormView extends LitTemplate {
     private void saveForm(){
         ParkingLot parkingLot = binder.getBean();
         parkingLot.setLastUpdatedTime(LocalDateTime.now());
+        parkingLotService.update(parkingLot);
+        parkingLotService.removeAllTimeBasedData(parkingLot);
         saveOccupiedDetails(parkingLot);
         saveRequestDetails(parkingLot);
-        parkingLotService.update(parkingLot);
 
         closeForm();
         mainView.updateContent();
@@ -413,82 +296,32 @@ public class ParkingFormView extends LitTemplate {
     }
 
     private void saveOccupiedDetails(ParkingLot parkingLot) {
-        if (parkingLot.getHowLongParked() != null && parkingLot.getHowLongParked().getId() != null) {
-            mainView.getTimeBasedDataService().delete(parkingLot.getHowLongParked().getId());
-        }
-
-        TimeBasedData occupied = new TimeBasedData();
-        occupied.setTimeType(occupiedRadio.getValue());
-
-        occupied.setAverageDay(averageOccupiedDay.getValue());
-        occupied.setAverageNight(averageOccupiedNight.getValue());
-
-        occupied.setWeekendDay(weekendOccupiedDay.getValue());
-        occupied.setWeekendNight(weekendOccupiedNight.getValue());
-        occupied.setWorkdayDay(workdayOccupiedDay.getValue());
-        occupied.setWorkdayNight(workdayOccupiedNight.getValue());
-        occupied.setHolidayDay(holidayOccupiedDay.getValue());
-        occupied.setHolidayNight(holidayOccupiedNight.getValue());
-
-        occupied.setMondayDay(mondayOccupiedDay.getValue());
-        occupied.setMondayNight(mondayOccupiedNight.getValue());
-        occupied.setTuesdayDay(tuesdayOccupiedDay.getValue());
-        occupied.setTuesdayNight(tuesdayOccupiedNight.getValue());
-        occupied.setWednesdayDay(wednesdayOccupiedDay.getValue());
-        occupied.setWednesdayNight(wednesdayOccupiedNight.getValue());
-        occupied.setThursdayDay(thursdayOccupiedDay.getValue());
-        occupied.setThursdayNight(thursdayOccupiedNight.getValue());
-        occupied.setFridayDay(fridayOccupiedDay.getValue());
-        occupied.setFridayNight(fridayOccupiedNight.getValue());
-        occupied.setSaturdayDay(saturdayOccupiedDay.getValue());
-        occupied.setSaturdayNight(saturdayOccupiedNight.getValue());
-        occupied.setSundayDay(sundayOccupiedDay.getValue());
-        occupied.setSundayNight(sundayOccupiedNight.getValue());
-
-        mainView.getTimeBasedDataService().update(occupied);
-        parkingLot.setHowLongParked(occupied);
+        saveDetailsFields(occupiedFields, occupiedRadio.getValue(), parkingLot.getId(), ParkingLot.FIELD_NAME_HOW_LONG_PARKED);
     }
 
     private void saveRequestDetails(ParkingLot parkingLot) {
-        if (parkingLot.getHowManyChanged() != null && parkingLot.getHowManyChanged().getId() != null) {
-            mainView.getTimeBasedDataService().delete(parkingLot.getHowManyChanged().getId());
+        saveDetailsFields(requestFields, requestRadio.getValue(), parkingLot.getId(), ParkingLot.FIELD_NAME_HOW_MANY_CHANGED);
+    }
+
+    private void saveDetailsFields(List<TimeDayNightField> fields, DayCategoryEnum category, long parkingId, String parkingFieldName) {
+        TimeBasedDataService service = mainView.getTimeBasedDataService();
+        for (TimeDayNightField field : fields) {
+            if(field.getDayType().getCategory().equals(category)) {
+                TimeBasedData time = new TimeBasedData();
+                time.setParentId(parkingId);
+                time.setParentFieldName(parkingFieldName);
+                time.setDayType(field.getDayType());
+                time.setValueDay(field.getDay().getValue());
+                time.setValueNight(field.getNight().getValue());
+                service.update(time);
+            }
         }
-
-        TimeBasedData request = new TimeBasedData();
-        request.setTimeType(requestRadio.getValue());
-
-        request.setAverageDay(averageRequestDay.getValue());
-        request.setAverageNight(averageRequestNight.getValue());
-
-        request.setWeekendDay(weekendRequestDay.getValue());
-        request.setWeekendNight(weekendRequestNight.getValue());
-        request.setWorkdayDay(workdayRequestDay.getValue());
-        request.setWorkdayNight(workdayRequestNight.getValue());
-        request.setHolidayDay(holidayRequestDay.getValue());
-        request.setHolidayNight(holidayRequestNight.getValue());
-
-        request.setMondayDay(mondayRequestDay.getValue());
-        request.setMondayNight(mondayRequestNight.getValue());
-        request.setTuesdayDay(tuesdayRequestDay.getValue());
-        request.setTuesdayNight(tuesdayRequestNight.getValue());
-        request.setWednesdayDay(wednesdayRequestDay.getValue());
-        request.setWednesdayNight(wednesdayRequestNight.getValue());
-        request.setThursdayDay(thursdayRequestDay.getValue());
-        request.setThursdayNight(thursdayRequestNight.getValue());
-        request.setFridayDay(fridayRequestDay.getValue());
-        request.setFridayNight(fridayRequestNight.getValue());
-        request.setSaturdayDay(saturdayRequestDay.getValue());
-        request.setSaturdayNight(saturdayRequestNight.getValue());
-        request.setSundayDay(sundayRequestDay.getValue());
-        request.setSundayNight(sundayRequestNight.getValue());
-
-        mainView.getTimeBasedDataService().update(request);
-        parkingLot.setHowManyChanged(request);
     }
 
     private void delete() {
         ParkingLot parkingLot = binder.getBean();
         parkingLotService.delete(parkingLot);
+        parkingLotService.removeAllTimeBasedData(parkingLot);
 
         closeForm();
         mainView.updateContent();

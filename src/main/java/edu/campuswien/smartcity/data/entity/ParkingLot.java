@@ -11,6 +11,8 @@ import java.util.List;
 @Getter
 @Setter
 public class ParkingLot extends AbstractEntity {
+    public static final String FIELD_NAME_HOW_LONG_PARKED = "HowLongParked";
+    public static final String FIELD_NAME_HOW_MANY_CHANGED = "HowManyChanged";
 
     @Column(nullable = false)
     private String name;
@@ -39,14 +41,6 @@ public class ParkingLot extends AbstractEntity {
 
     @Column
     private LocalDateTime lastUpdatedTime;
-
-    @OneToOne(optional = false)
-    @JoinColumn(nullable = true)
-    private TimeBasedData howLongParked;
-
-    @OneToOne(optional = false)
-    @JoinColumn(nullable = true)
-    private TimeBasedData howManyChanged;
 
     @OneToMany(mappedBy = "parkingLot", targetEntity = ParkingSpot.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ParkingSpot> spots;

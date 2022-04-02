@@ -40,111 +40,17 @@ export class ParkingFormView extends LitElement {
             <vaadin-radio-group colspan="2" id="occupiedRadio" 
                                 label="On average, how long does each vehicle stay in the parking lot?" theme="horizontal">
             </vaadin-radio-group>
-            <span colspan="2" id="generallyOccupiedDetail">
-                <vaadin-custom-field label="General average">
-                    <vaadin-integer-field id="averageOccupied_day" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                    <vaadin-integer-field id="averageOccupied_night" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                </vaadin-custom-field>
-            </span>
-            <span colspan="2" id="workRestTimeOccupiedDetail">
-                <vaadin-custom-field label="Work days">
-                    <vaadin-integer-field id="workdayOccupied_day" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                    <vaadin-integer-field id="workdayOccupied_night" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Weekends">
-                    <vaadin-integer-field id="weekendOccupied_day" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                    <vaadin-integer-field id="weekendOccupied_night" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Holidays">
-                    <vaadin-integer-field id="holidayOccupied_day" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                    <vaadin-integer-field id="holidayOccupied_night" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                </vaadin-custom-field>
-            </span>
-            <span colspan="2" id="weekdaysOccupiedDetail">
-                <vaadin-custom-field label="Monday">
-                    <vaadin-integer-field id="mondayOccupied_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="mondayOccupied_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Tuesday">
-                    <vaadin-integer-field id="tuesdayOccupied_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="tuesdayOccupied_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Wednesday">
-                    <vaadin-integer-field id="wednesdayOccupied_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="wednesdayOccupied_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Thursday">
-                    <vaadin-integer-field id="thursdayOccupied_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="thursdayOccupied_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Friday">
-                    <vaadin-integer-field id="fridayOccupied_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="fridayOccupied_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Saturday">
-                    <vaadin-integer-field id="saturdayOccupied_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="saturdayOccupied_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Sunday">
-                    <vaadin-integer-field id="sundayOccupied_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="sundayOccupied_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>
-            </span>
+            <span colspan="2" id="generallyOccupiedDetail"></span>
+            <span colspan="2" id="workRestTimeOccupiedDetail"></span>
+            <span colspan="2" id="weekdaysOccupiedDetail"></span>
             
             <hr colspan="2"/>
             <vaadin-radio-group colspan="2" id="requestRadio"
                                 label="On average, how many spot statuses are changed in each period?" theme="horizontal">
             </vaadin-radio-group>
-            <span colspan="2" id="generallyRequestDetail">
-                <vaadin-custom-field label="General average">
-                    <vaadin-integer-field id="averageRequest_day" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                    <vaadin-integer-field id="averageRequest_night" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                </vaadin-custom-field>
-            </span>
-            <span colspan="2" id="workRestTimeRequestDetail">
-                <vaadin-custom-field label="Work days">
-                    <vaadin-integer-field id="workdayRequest_day" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                    <vaadin-integer-field id="workdayRequest_night" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Weekends">
-                    <vaadin-integer-field id="weekendRequest_day" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                    <vaadin-integer-field id="weekendRequest_night" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Holidays">
-                    <vaadin-integer-field id="holidayRequest_day" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                    <vaadin-integer-field id="holidayRequest_night" placeholder="0" style="width: 5em"></vaadin-integer-field>
-                </vaadin-custom-field>
-            </span>
-            <span colspan="2" id="weekdaysRequestDetail">
-                <vaadin-custom-field label="Monday">
-                    <vaadin-integer-field id="mondayRequest_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="mondayRequest_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Tuesday">
-                    <vaadin-integer-field id="tuesdayRequest_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="tuesdayRequest_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Wednesday">
-                    <vaadin-integer-field id="wednesdayRequest_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="wednesdayRequest_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Thursday">
-                    <vaadin-integer-field id="thursdayRequest_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="thursdayRequest_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Friday">
-                    <vaadin-integer-field id="fridayRequest_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="fridayRequest_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Saturday">
-                    <vaadin-integer-field id="saturdayRequest_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="saturdayRequest_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>&ndash;
-                <vaadin-custom-field label="Sunday">
-                    <vaadin-integer-field id="sundayRequest_day" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                    <vaadin-integer-field id="sundayRequest_night" placeholder="0" style="width: 4em"></vaadin-integer-field>
-                </vaadin-custom-field>
-            </span>
+            <span colspan="2" id="generallyRequestDetail"></span>
+            <span colspan="2" id="workRestTimeRequestDetail"></span>
+            <span colspan="2" id="weekdaysRequestDetail"></span>
             
             <hr colspan="2"/>
             <vaadin-custom-field label="Time of daylight and darkness" id="daylight_darkness">

@@ -1,6 +1,6 @@
 package edu.campuswien.smartcity.data.entity;
 
-public enum TimeTypeEnum {
+public enum DayCategoryEnum {
     Generally(0, "Generally"),
     WorkRestTime(1, "Work time and rest time"),
     WeekDays(2, "Days of week");
@@ -8,7 +8,7 @@ public enum TimeTypeEnum {
     private int id;
     private String description;
 
-    TimeTypeEnum(int id, String description) {
+    DayCategoryEnum(int id, String description) {
         this.id = id;
         this.description = description;
     }
