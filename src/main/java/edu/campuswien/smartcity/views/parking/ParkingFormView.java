@@ -17,6 +17,7 @@ import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import edu.campuswien.smartcity.component.TimeDayNightField;
@@ -26,6 +27,7 @@ import edu.campuswien.smartcity.data.service.ParkingSpotService;
 import edu.campuswien.smartcity.data.service.TimeBasedDataService;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +50,12 @@ public class ParkingFormView extends LitTemplate {
     private IntegerField startId;
     @Id("numberOfOccupiedAtStart")
     private IntegerField numberOfOccupiedAtStart;
+
+    // Time fields
+    @Id("daylight")
+    private TimePicker daylight;
+    @Id("darkness")
+    private TimePicker darkness;
 
     // Average of occupied
     // How long does each vehicle stay in the parking lot on average?
@@ -148,14 +156,8 @@ public class ParkingFormView extends LitTemplate {
             if(timeType.getCategory().equals(DayCategoryEnum.Generally)) {
                 generallyOccupiedDetail.add(field);
             } else if(timeType.getCategory().equals(DayCategoryEnum.WorkRestTime)) {
-                if(workRestTimeOccupiedDetail.getChildren().count() > 0) {
-                    workRestTimeOccupiedDetail.add(new Text("–"));
-                }
                 workRestTimeOccupiedDetail.add(field);
             } else if(timeType.getCategory().equals(DayCategoryEnum.WeekDays)) {
-                if(weekdaysOccupiedDetail.getChildren().count() > 0) {
-                    weekdaysOccupiedDetail.add(new Text("–"));
-                }
                 weekdaysOccupiedDetail.add(field);
             }
         }
@@ -191,14 +193,8 @@ public class ParkingFormView extends LitTemplate {
             if(timeType.getCategory().equals(DayCategoryEnum.Generally)) {
                 generallyRequestDetail.add(field);
             } else if(timeType.getCategory().equals(DayCategoryEnum.WorkRestTime)) {
-                if(workRestTimeRequestDetail.getChildren().count() > 0) {
-                    workRestTimeRequestDetail.add(new Text("–"));
-                }
                 workRestTimeRequestDetail.add(field);
             } else if(timeType.getCategory().equals(DayCategoryEnum.WeekDays)) {
-                if(weekdaysRequestDetail.getChildren().count() > 0) {
-                    weekdaysRequestDetail.add(new Text("–"));
-                }
                 weekdaysRequestDetail.add(field);
             }
         }
@@ -212,6 +208,9 @@ public class ParkingFormView extends LitTemplate {
         } else {
             setVisible(true);
             name.focus();
+
+            daylight.setValue(parkingLot.getDaylight() != null ? parkingLot.getDaylight() : LocalTime.of(6,0));
+            darkness.setValue(parkingLot.getDarkness() != null ? parkingLot.getDarkness(): LocalTime.of(18,0));
             setOccupiedDetails(parkingLot);
             setRequestDetails(parkingLot);
 
@@ -311,8 +310,8 @@ public class ParkingFormView extends LitTemplate {
                 time.setParentId(parkingId);
                 time.setParentFieldName(parkingFieldName);
                 time.setDayType(field.getDayType());
-                time.setValueDay(field.getDay().getValue());
-                time.setValueNight(field.getNight().getValue());
+                time.setValueDay(field.getDay().getValue() != null ? field.getDay().getValue() : 0);
+                time.setValueNight(field.getNight().getValue() != null ? field.getNight().getValue() : 0);
                 service.update(time);
             }
         }

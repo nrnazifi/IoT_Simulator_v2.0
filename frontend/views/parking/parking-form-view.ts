@@ -37,6 +37,12 @@ export class ParkingFormView extends LitElement {
             <vaadin-text-area label="Description" id="description"></vaadin-text-area>
 
             <hr colspan="2"/>
+            <vaadin-custom-field label="Time of daylight and darkness" id="daylight_darkness" helper-text="These are used for the following configurations">
+                <vaadin-time-picker id="daylight" label="Daylight" .step="${60 * 30}" auto-open-disabled></vaadin-time-picker>
+                <vaadin-time-picker id="darkness" label="Darkness" .step="${60 * 30}" auto-open-disabled></vaadin-time-picker>
+            </vaadin-custom-field>
+
+            <hr colspan="2"/>
             <vaadin-radio-group colspan="2" id="occupiedRadio" 
                                 label="On average, how long does each vehicle stay in the parking lot?" theme="horizontal">
             </vaadin-radio-group>
@@ -51,12 +57,6 @@ export class ParkingFormView extends LitElement {
             <span colspan="2" id="generallyRequestDetail"></span>
             <span colspan="2" id="workRestTimeRequestDetail"></span>
             <span colspan="2" id="weekdaysRequestDetail"></span>
-            
-            <hr colspan="2"/>
-            <vaadin-custom-field label="Time of daylight and darkness" id="daylight_darkness">
-                <vaadin-text-field id="daylight" label="Daylight" placeholder="06:00" style="width: 10em"></vaadin-text-field>
-                <vaadin-text-field id="darkness" label="Darkness" placeholder="18:00" style="width: 10em"></vaadin-text-field>
-            </vaadin-custom-field>
         </vaadin-form-layout>
         <vaadin-horizontal-layout style="margin-top: var(--lumo-space-m); margin-bottom: var(--lumo-space-l);" theme="spacing">
             <vaadin-button id="cancel">

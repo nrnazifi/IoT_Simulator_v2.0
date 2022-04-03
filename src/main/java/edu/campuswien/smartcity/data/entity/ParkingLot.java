@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,11 @@ public class ParkingLot extends AbstractEntity {
      */
     @Column(nullable = false, columnDefinition = "integer default 0")
     private Integer numberOfOccupiedAtStart = 0;
+
+    @Column
+    private LocalTime daylight;
+    @Column
+    private LocalTime darkness;
 
     @Column
     private LocalDateTime lastUpdatedTime;
