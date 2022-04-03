@@ -1,9 +1,8 @@
 package edu.campuswien.smartcity.component;
 
-import com.vaadin.flow.component.Text;
-import com.vaadin.flow.component.Unit;
 import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import edu.campuswien.smartcity.data.entity.DayTypeEnum;
 import lombok.Getter;
@@ -29,15 +28,15 @@ public class TimeDayNightField extends CustomField<List<Integer>> {
         day = new IntegerField();
         day.setPlaceholder("0");
         day.setPrefixComponent(VaadinIcon.SUN_O.create());
-        day.setWidth(4.5F, Unit.EM);
-        //day.addClassNames();
+        day.addClassNames("day-night-field");
 
         night = new IntegerField();
         night.setPlaceholder("0");
         night.setPrefixComponent(VaadinIcon.MOON.create());
-        night.setWidth(4.5F, Unit.EM);
+        night.addClassNames("day-night-field");
 
-        add(day, new Text(" "), night);
+        VerticalLayout verticalLayout = new VerticalLayout(day,night);
+        add(verticalLayout);
     }
 
     @Override
