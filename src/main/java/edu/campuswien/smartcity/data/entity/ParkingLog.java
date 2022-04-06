@@ -15,7 +15,7 @@ public class ParkingLog {
 
     @ManyToOne
     @JoinColumn
-    private Simulation simulation;
+    private Job job;
 
     @ManyToOne
     @JoinColumn

@@ -27,12 +27,6 @@ public class Simulation extends AbstractEntity {
     @Column
     private LocalDateTime scheduleTime;
 
-    @Column
-    private LocalDateTime startTime;
-
-    @Column
-    private LocalDateTime endTime;
-
     @Column(columnDefinition = "double default 1.0")
     private double timeUnit = 1.0;
 
@@ -53,6 +47,6 @@ public class Simulation extends AbstractEntity {
     @Column(columnDefinition = "smallint")
     private DataFormatEnum dataFormat;
 
-    @OneToMany(mappedBy = "simulation", targetEntity = ParkingLog.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ParkingLog> logs;
+    @OneToMany(mappedBy = "simulation", targetEntity = Job.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Job> jobs;
 }

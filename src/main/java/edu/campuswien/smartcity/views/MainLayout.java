@@ -19,6 +19,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import edu.campuswien.smartcity.views.about.AboutView;
+import edu.campuswien.smartcity.views.job.JobView;
 import edu.campuswien.smartcity.views.parking.ParkingFormView;
 import edu.campuswien.smartcity.views.parking.ParkingTemplateView;
 import edu.campuswien.smartcity.views.simulation.SimulationView;
@@ -127,6 +128,7 @@ public class MainLayout extends AppLayout {
         return new MenuItemInfo[]{ //
                 new MenuItemInfo("Parking Template", "la la-microchip", ParkingTemplateView.class), //
                 new MenuItemInfo("Simulation", "la la-cube", SimulationView.class), //
+                new MenuItemInfo("Jobs", "la la-history", JobView.class), //
                 new MenuItemInfo("Charts", "la la-chart-bar", AboutView.class), //
                 new MenuItemInfo("About", "la la-info", AboutView.class), //
 
