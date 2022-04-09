@@ -1,4 +1,4 @@
-package edu.campuswien.smartcity.data.entity;
+package edu.campuswien.smartcity.data.enums;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,5 +1,6 @@
 package edu.campuswien.smartcity.data.entity;
 
+import edu.campuswien.smartcity.data.enums.DayTypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 

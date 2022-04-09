@@ -15,7 +15,7 @@ import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import edu.campuswien.smartcity.data.entity.Job;
-import edu.campuswien.smartcity.data.entity.JobStatusEnum;
+import edu.campuswien.smartcity.data.enums.JobStatusEnum;
 import edu.campuswien.smartcity.data.entity.Simulation;
 import edu.campuswien.smartcity.data.service.JobService;
 import edu.campuswien.smartcity.data.service.ParkingLotService;

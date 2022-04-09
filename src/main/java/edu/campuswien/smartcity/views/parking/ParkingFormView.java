@@ -1,7 +1,6 @@
 package edu.campuswien.smartcity.views.parking;
 
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.Uses;
@@ -22,6 +21,8 @@ import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.Binder;
 import edu.campuswien.smartcity.component.TimeDayNightField;
 import edu.campuswien.smartcity.data.entity.*;
+import edu.campuswien.smartcity.data.enums.DayCategoryEnum;
+import edu.campuswien.smartcity.data.enums.DayTypeEnum;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
 import edu.campuswien.smartcity.data.service.TimeBasedDataService;

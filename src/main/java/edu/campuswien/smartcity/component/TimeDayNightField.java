@@ -4,7 +4,7 @@ import com.vaadin.flow.component.customfield.CustomField;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
-import edu.campuswien.smartcity.data.entity.DayTypeEnum;
+import edu.campuswien.smartcity.data.enums.DayTypeEnum;
 import lombok.Getter;
 
 import java.util.Arrays;

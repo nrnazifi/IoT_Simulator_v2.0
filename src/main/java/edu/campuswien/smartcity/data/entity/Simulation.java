@@ -1,5 +1,7 @@
 package edu.campuswien.smartcity.data.entity;
 
+import edu.campuswien.smartcity.data.enums.DataFormatEnum;
+import edu.campuswien.smartcity.data.enums.ProtocolEnum;
 import lombok.Getter;
 import lombok.Setter;
 

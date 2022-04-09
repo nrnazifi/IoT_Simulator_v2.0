@@ -1,14 +1,14 @@
-package edu.campuswien.smartcity.data.entity;
+package edu.campuswien.smartcity.data.enums;
 
-public enum ProtocolEnum {
-    COAP(0, "CoAP"),
-    MQTT(1, "MQTT"),
-    HTTP(2, "HTTP");
+public enum DataFormatEnum {
+    JSON(0, "JSON"),
+    CSV(1, "CSV"),
+    XML(2, "XML");
 
     private int id;
     private String description;
 
-    ProtocolEnum(int id, String description) {
+    DataFormatEnum(int id, String description) {
         this.id = id;
         this.description = description;
     }

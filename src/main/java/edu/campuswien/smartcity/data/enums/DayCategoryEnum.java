@@ -1,4 +1,4 @@
-package edu.campuswien.smartcity.data.entity;
+package edu.campuswien.smartcity.data.enums;
 
 public enum DayCategoryEnum {
     Generally(0, "Generally"),

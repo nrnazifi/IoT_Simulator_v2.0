@@ -1,4 +1,4 @@
-package edu.campuswien.smartcity.data.entity;
+package edu.campuswien.smartcity.data.enums;
 
 public enum JobStatusEnum {
     Running(0, "Running"),
