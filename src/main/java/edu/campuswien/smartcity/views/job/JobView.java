@@ -13,7 +13,7 @@ import com.vaadin.flow.component.gridpro.GridPro;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.littemplate.LitTemplate;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -22,6 +22,7 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouterLink;
 import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.service.JobService;
 import edu.campuswien.smartcity.data.service.SimulationService;
@@ -70,6 +71,7 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
 
     private void createGridComponent() {
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COLUMN_BORDERS);
+        grid.setWidthFull();
         grid.setHeight("100%");
 
         dataProvider = new ListDataProvider<Job>(jobService.list());
@@ -77,34 +79,40 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
     }
 
     private void addColumnsToGrid() {
+        createSimulationColumn();
+        createStatusColumn();
+        createTimeColumn();
+        createActionColumn();
+        createResultColumn();
+    }
+
+    private void createSimulationColumn() {
         simulationColumn = grid
                 .addColumn(new TextRenderer<>(job -> job.getSimulation().getName()))
-                .setComparator(job -> job.getSimulation().getName()).setHeader("Simulation").setWidth("30%").setFlexGrow(0);
+                .setComparator(job -> job.getSimulation().getName()).setHeader("Simulation")
+                .setFrozen(true).setAutoWidth(true).setFlexGrow(0);
 
         intervalColumn = grid
                 .addColumn(new NumberRenderer<>(job -> job.getSimulation().getTimeUnit(), NumberFormat.getNumberInstance(Locale.US)))
-                .setComparator(job -> job.getSimulation().getTimeUnit()).setHeader("Time Unit").setWidth("10%").setFlexGrow(0);
-
-        createStatusColumn();
-
-        startTimeColumn = grid
-                .addColumn(new LocalDateTimeRenderer<>(job -> job.getStartTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
-                .setComparator(job -> job.getStartTime()).setHeader("Start Time").setWidth("15%").setFlexGrow(0);
-        endTimeColumn = grid
-                .addColumn(new LocalDateTimeRenderer<>(job -> job.getEndTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
-                .setComparator(job -> job.getEndTime()).setHeader("End Time").setWidth("15%").setFlexGrow(0);
-
-        createActionColumn();
-        //createResultColumn();
+                .setComparator(job -> job.getSimulation().getTimeUnit()).setHeader("Time Unit").setAutoWidth(true).setFlexGrow(0);
     }
 
     private void createStatusColumn() {
         statusColumn = grid.addColumn(new ComponentRenderer<>(job -> {
             Span span = new Span();
             span.setText(job.getStatus().getText());
-            span.getElement().setAttribute("theme", "badge");
+            span.addClassNames("job-status", "job-" + job.getStatus().toString().toLowerCase());
             return span;
-        })).setComparator(job -> job.getStatus()).setHeader("Status").setWidth("10%").setFlexGrow(0);
+        })).setComparator(job -> job.getStatus()).setHeader("Status").setAutoWidth(true).setFlexGrow(0);
+    }
+
+    private void createTimeColumn() {
+        startTimeColumn = grid
+                .addColumn(new LocalDateTimeRenderer<>(job -> job.getStartTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
+                .setComparator(job -> job.getStartTime()).setHeader("Start Time").setAutoWidth(true).setFlexGrow(0);
+        endTimeColumn = grid
+                .addColumn(new LocalDateTimeRenderer<>(job -> job.getEndTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
+                .setComparator(job -> job.getEndTime()).setHeader("End Time").setAutoWidth(true).setFlexGrow(0);
     }
 
     private void createActionColumn() {
@@ -130,14 +138,26 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
                 case NotYetRun:
                     return startBtn;
                 case Running:
-                    return new VerticalLayout(abortBtn, pauseBtn);
+                    return new HorizontalLayout(abortBtn, pauseBtn);
                 case Paused:
                     return resumeBtn;
                 case Aborted:
                     return restartBtn;
             }
             return null;
-        }).setHeader("Action").setWidth("20%").setFlexGrow(0);
+        }).setHeader("Action").setAutoWidth(true).setFlexGrow(0);
+    }
+
+    private void createResultColumn() {
+        resultColumn = grid.addComponentColumn(job -> {
+            RouterLink link = new RouterLink();
+            link.addClassNames("flex", "mx-s", "p-s", "relative");
+            link.setRoute(JobView.class);
+            Span text = new Span("Explore");
+            text.addClassNames("font-medium", "text-s");
+            link.add(new MainLayout.MenuItemInfo.LineAwesomeIcon("la la-chart-area"), text);
+            return link;
+        }).setHeader("Result").setAutoWidth(true).setFlexGrow(0);
     }
 
     private void startJob(Job job) {

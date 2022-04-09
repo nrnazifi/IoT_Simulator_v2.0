@@ -2,6 +2,7 @@ package edu.campuswien.smartcity.views.simulation;
 
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.CheckboxGroup;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -30,6 +31,8 @@ import edu.campuswien.smartcity.data.entity.ProtocolEnum;
 import edu.campuswien.smartcity.data.entity.Simulation;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.SimulationService;
+import edu.campuswien.smartcity.views.job.JobView;
+import edu.campuswien.smartcity.views.utils.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,7 @@ import java.util.List;
 @Uses(Icon.class)
 public class SimulationFormView extends LitTemplate {
     private static final long serialVersionUID = 7738014728161920822L;
+
     private static final String SCHEDULING_NOW = "Now";
     private static final String SCHEDULING_LATER = "Later";
     private static final String STORAGE_ON_DATABASE = "on Database";
@@ -71,23 +75,23 @@ public class SimulationFormView extends LitTemplate {
 
     @Id("btnSave")
     private Button btnSave;
+    @Id("btnSaveRun")
+    private Button btnSaveRun;
     @Id("cancel")
     private Button btnCancel;
     @Id("btnDelete")
     private Button btnDelete;
 
-    private Binder<Simulation> binder = new BeanValidationBinder<>(Simulation.class);
-    private SimulationService simulationService;
-    private ParkingLotService parkingLotService;
-    private SimulationView mainView;
-    private Dialog dialog;
+    private final Binder<Simulation> binder = new BeanValidationBinder<>(Simulation.class);
+    private final SimulationService simulationService;
+    private final SimulationView mainView;
+    private final Dialog dialog;
 
     public SimulationFormView(SimulationView mainView, Dialog dialog, SimulationService simulationService,
                               ParkingLotService parkingLotService) {
         this.mainView = mainView;
         this.dialog = dialog;
         this.simulationService = simulationService;
-        this.parkingLotService = parkingLotService;
 
         binder.bindInstanceFields(this);
 
@@ -96,13 +100,16 @@ public class SimulationFormView extends LitTemplate {
 
         //Set Icons for buttons
         btnSave.setIcon(new Icon(VaadinIcon.HARDDRIVE_O));
+        btnSaveRun.setIcon(new Icon(VaadinIcon.PLAY_CIRCLE_O));
         btnDelete.setIcon(new Icon(VaadinIcon.TRASH));
         //Set icons in right side
         btnSave.setIconAfterText(true);
+        btnSaveRun.setIconAfterText(true);
         btnDelete.setIconAfterText(true);
 
         btnCancel.addClickListener(e -> closeForm());
         btnSave.addClickListener(e -> saveForm());
+        btnSaveRun.addClickListener(e -> saveAndRun());
         btnDelete.addClickListener(e -> delete());
 
         schedulingRadio.setItems(SCHEDULING_NOW, SCHEDULING_LATER);
@@ -171,7 +178,7 @@ public class SimulationFormView extends LitTemplate {
         setSimulation(null);
     }
 
-    private void saveForm(){
+    private Simulation saveForm(){
         Simulation simulation = binder.getBean();
         //update fields in the entity
         simulation.setParkingLot(parkingLots.getValue());
@@ -193,6 +200,19 @@ public class SimulationFormView extends LitTemplate {
         mainView.updateContent();
         Notification notification = Notification.show(simulation.getName() + " is stored!", 5000, Notification.Position.TOP_CENTER);
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+
+        return simulation;
+    }
+
+    private void saveAndRun() {
+        Simulation simulation = saveForm();
+        mainView.saveJob(simulation);
+
+        ViewUtil.showNotification("A job is running! You can see it in the job list.",
+                NotificationVariant.LUMO_SUCCESS, VaadinIcon.CHECK_CIRCLE, true, "View",
+                clickEvent -> {
+                    UI.getCurrent().navigate(JobView.class);
+                });
     }
 
     private void delete() {

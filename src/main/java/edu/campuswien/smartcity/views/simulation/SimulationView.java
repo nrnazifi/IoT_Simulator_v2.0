@@ -14,13 +14,16 @@ import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
-import edu.campuswien.smartcity.data.entity.ParkingLot;
+import edu.campuswien.smartcity.data.entity.Job;
+import edu.campuswien.smartcity.data.entity.JobStatusEnum;
 import edu.campuswien.smartcity.data.entity.Simulation;
+import edu.campuswien.smartcity.data.service.JobService;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.SimulationService;
 import edu.campuswien.smartcity.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @PageTitle("Simulation")
@@ -31,8 +34,9 @@ import java.util.List;
 public class SimulationView extends LitTemplate implements HasComponents, HasStyle{
     private static final long serialVersionUID = -1553207620632898350L;
 
-    private SimulationService simulationService;
-    private SimulationFormView simulationForm;
+    private final SimulationService simulationService;
+    private final SimulationFormView simulationForm;
+    private final JobService jobService;
 
     @Id("btnNew")
     private Button btnNew;
@@ -42,8 +46,9 @@ public class SimulationView extends LitTemplate implements HasComponents, HasSty
     private Dialog dialog = new Dialog();
 
     @Autowired
-    public SimulationView(SimulationService simulationService, ParkingLotService parkingLotService) {
+    public SimulationView(SimulationService simulationService, ParkingLotService parkingLotService, JobService jobService) {
         this.simulationService = simulationService;
+        this.jobService = jobService;
 
         addClassNames("simulation-view", "flex", "flex-col", "h-full");
         //Set icons
@@ -84,6 +89,16 @@ public class SimulationView extends LitTemplate implements HasComponents, HasSty
     protected void onDelete(Simulation simulation) {
         simulationService.delete(simulation);
         updateContent();
+    }
+
+    protected void saveJob(Simulation simulation) {
+        Job job = new Job();
+        job.setSimulation(simulation);
+        job.setStatus(JobStatusEnum.NotYetRun);
+        job.setStartTime(LocalDateTime.now());
+        job.setEndTime(null);
+
+        jobService.update(job);
     }
 
 }

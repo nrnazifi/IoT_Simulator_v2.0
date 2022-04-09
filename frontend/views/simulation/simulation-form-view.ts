@@ -23,6 +23,7 @@ export class SimulationFormView extends LitElement {
                     <p class="mb-s mt-0 text-secondary">new sim</p>
                 </vaadin-vertical-layout>
                 <vaadin-horizontal-layout class="items-center justify-between" theme="on spacing-s">
+                    <vaadin-button theme="primary" id="btnSaveRun">Save and Run</vaadin-button>
                     <vaadin-button theme="primary" id="btnSave">Save</vaadin-button>
                     <vaadin-button theme="error primary" id="btnDelete">Delete</vaadin-button>
                 </vaadin-horizontal-layout>

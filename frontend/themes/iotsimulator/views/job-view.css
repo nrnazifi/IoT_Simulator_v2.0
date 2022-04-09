@@ -1,0 +1,21 @@
+.job-status {
+    align-items: center;
+    justify-content: center;
+    padding: 0.4em calc(0.5em + var(--lumo-border-radius-s) / 4);
+    color: var(--lumo-primary-text-color);
+    border-radius: var(--lumo-border-radius-s);
+    font-family: var(--lumo-font-family);
+    font-size: var(--lumo-font-size-s);
+    font-weight: 500;
+}
+
+.job-running {
+    color: var(--lumo-success-text-color) !important;
+}
+.job-aborted {
+    color: var(--lumo-error-text-color) !important;
+}
+.job-pause {
+}
+.job-notyetrun {
+}
