@@ -1,5 +1,6 @@
 package edu.campuswien.smartcity.data.entity;
 
+import edu.campuswien.smartcity.data.enums.JobStatusEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,6 +29,6 @@ public class Job extends AbstractEntity {
     //@Column
     //private Integer success/failed/pending
 
-    @OneToMany(mappedBy = "job", targetEntity = ParkingLog.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ParkingLog> logs;
+    //@OneToMany(mappedBy = "job", targetEntity = ParkingRecord.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //private List<ParkingRecord> records;
 }

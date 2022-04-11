@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class ParkingLog {
+public class ParkingRecord {
     @Id
     @Column(nullable = false)
     private Long timestampId;
