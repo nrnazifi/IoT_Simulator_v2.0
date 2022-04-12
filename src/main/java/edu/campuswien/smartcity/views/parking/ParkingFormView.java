@@ -224,11 +224,11 @@ public class ParkingFormView extends LitTemplate {
                 //edit: enable buttons
                 btnDelete.setVisible(true);
                 btnGenerate.setVisible(true);
-                if(parkingLot.getSpots().isEmpty()) {
+                /*if(parkingLot.getSpots().isEmpty()) {
                     btnShowSpots.setEnabled(false);
                 } else {
                     btnShowSpots.setEnabled(true);
-                }
+                }*/
             }
         }
 
@@ -329,7 +329,7 @@ public class ParkingFormView extends LitTemplate {
     }
 
     private void generateSpots() {
-        ParkingSpotService parkingSpotService = mainView.getParkingSpotService();
+        /*ParkingSpotService parkingSpotService = mainView.getParkingSpotService();
         ParkingLot parkingLot = binder.getBean();
 
         if(!parkingLot.getSpots().isEmpty()) {
@@ -355,7 +355,7 @@ public class ParkingFormView extends LitTemplate {
         Notification notification = Notification.show("Spots of the " + parkingLot.getName() + " are generated!", 5000, Notification.Position.TOP_CENTER);
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
         btnShowSpots.setEnabled(true);
-        btnGenerate.setEnabled(false);
+        btnGenerate.setEnabled(false);*/
     }
 
     private void showSpots() {

@@ -29,6 +29,16 @@ public class Job extends AbstractEntity {
     //@Column
     //private Integer success/failed/pending
 
-    //@OneToMany(mappedBy = "job", targetEntity = ParkingRecord.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //private List<ParkingRecord> records;
+    @OneToMany(mappedBy = "job", targetEntity = ParkingSpot.class, fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    private List<ParkingSpot> spots;
+
+    /*public void removeAllSpots() {
+        ArrayList<ParkingSpot> spotList = new ArrayList<>(spots);
+        for (ParkingSpot spot : spotList) {
+            spot.setJob(null);
+            this.spots.remove(spot);
+        }
+        spotList.clear();
+    }*/
+
 }

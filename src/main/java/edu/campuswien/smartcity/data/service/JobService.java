@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 public class JobService extends CrudService<Job, Long> {
-    private JobRepository repository;
+    private final JobRepository repository;
 
     public JobService(@Autowired JobRepository repository) {
         this.repository = repository;
@@ -28,7 +28,6 @@ public class JobService extends CrudService<Job, Long> {
     }
 
     @Override
-    @Transactional
     public Job update(Job entity) {
         return this.getRepository().saveAndFlush(entity);
     }

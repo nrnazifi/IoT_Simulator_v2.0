@@ -67,8 +67,8 @@ public class ParkingSpotsView extends LitTemplate implements BeforeEnterObserver
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_COLUMN_BORDERS);
         grid.setHeight("100%");
 
-        dataProvider = new ListDataProvider<ParkingSpot>(parkingLot.getSpots());
-        grid.setDataProvider(dataProvider);
+        //dataProvider = new ListDataProvider<ParkingSpot>(parkingLot.getSpots());
+        //grid.setDataProvider(dataProvider);
     }
 
     private void addColumnsToGrid() {

@@ -4,22 +4,30 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
-public class ParkingRecord {
-    @Id
+public class ParkingRecord extends AbstractEntity {
+
     @Column(nullable = false)
-    private Long timestampId;
+    private Long jobId;
 
-    @ManyToOne
-    @JoinColumn
-    private Job job;
+    @Column(nullable = false)
+    private Long spotId;
 
-    @ManyToOne
-    @JoinColumn
-    private ParkingSpot parkingSpot;
+    @Column(nullable = false)
+    private String deviceId;
+
+    @Column(nullable = false)
+    private LocalDateTime arrivalTime;
+
+    @Column(nullable = false)
+    private LocalDateTime departureTime;
+
+    @Column(nullable = false)
+    private Long durationSeconds;
 
     @Column(nullable = false)
     private Boolean status;

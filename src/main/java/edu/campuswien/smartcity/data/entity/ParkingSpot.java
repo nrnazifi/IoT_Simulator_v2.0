@@ -4,17 +4,25 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
 public class ParkingSpot extends AbstractEntity {
 
-    @Column(unique = true, nullable = false)
-    // generated name as
-    private String deviceId;
+    @Column
+    private String deviceId;//TODO generated name as
 
-    @ManyToOne(optional = false)
-    @JoinColumn(nullable = true)
+    @ManyToOne
     private ParkingLot parkingLot;
+
+    @ManyToOne
+    private Job job;
+
+    @Column
+    private Boolean status;
+
+    @Column
+    private LocalDateTime lastChangedTime;
 }

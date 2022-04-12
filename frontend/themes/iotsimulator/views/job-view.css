@@ -12,7 +12,7 @@
 .job-running {
     color: var(--lumo-success-text-color) !important;
 }
-.job-aborted {
+.job-stopped {
     color: var(--lumo-error-text-color) !important;
 }
 .job-pause {

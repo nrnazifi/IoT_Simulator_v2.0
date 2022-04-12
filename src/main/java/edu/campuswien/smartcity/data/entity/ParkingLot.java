@@ -15,7 +15,7 @@ public class ParkingLot extends AbstractEntity {
     public static final String FIELD_NAME_HOW_LONG_PARKED = "HowLongParked";
     public static final String FIELD_NAME_HOW_MANY_CHANGED = "HowManyChanged";
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String name;
 
     /**
@@ -48,6 +48,6 @@ public class ParkingLot extends AbstractEntity {
     @Column
     private LocalDateTime lastUpdatedTime;
 
-    @OneToMany(mappedBy = "parkingLot", targetEntity = ParkingSpot.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ParkingSpot> spots;
+    @OneToMany(mappedBy = "parkingLot", targetEntity = ParkingSpot.class, fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
+    private List<ParkingSpot> spots;//TODO prevent getter?
 }

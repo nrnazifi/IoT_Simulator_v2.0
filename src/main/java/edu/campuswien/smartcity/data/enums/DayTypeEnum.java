@@ -1,5 +1,6 @@
 package edu.campuswien.smartcity.data.enums;
 
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,5 +47,25 @@ public enum DayTypeEnum {
             }
         }
         return result;
+    }
+
+    public static DayTypeEnum convertDayOfWeek(DayOfWeek dayOfWeek) {
+        switch (dayOfWeek) {
+            case MONDAY:
+                return DayTypeEnum.Monday;
+            case TUESDAY:
+                return DayTypeEnum.Tuesday;
+            case WEDNESDAY:
+                return DayTypeEnum.Wednesday;
+            case THURSDAY:
+                return DayTypeEnum.Thursday;
+            case FRIDAY:
+                return DayTypeEnum.Friday;
+            case SATURDAY:
+                return DayTypeEnum.Saturday;
+            case SUNDAY:
+                return DayTypeEnum.Sunday;
+        }
+        throw new RuntimeException(String.format("Unknown Type Exception (%s) in convertDayOfWeek()", dayOfWeek.name()));
     }
 }
