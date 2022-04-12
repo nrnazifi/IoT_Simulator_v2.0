@@ -12,9 +12,9 @@ public abstract class ScheduledJob {
 
     private ScheduledExecutorService executorService;
 
-    public abstract boolean start(Job job);
+    public abstract boolean start();
 
-    public abstract boolean stop(Job job);
+    public abstract boolean stop();
 
     protected void resetTimer() {
         if(executorService != null) {

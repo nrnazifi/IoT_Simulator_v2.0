@@ -8,8 +8,6 @@ import edu.campuswien.smartcity.data.service.JobService;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.ParkingRecordService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
@@ -20,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.TimerTask;
 
-@Component
 public class ScheduledParkingJob extends ScheduledJob {
 
     private Job job;
@@ -32,9 +29,9 @@ public class ScheduledParkingJob extends ScheduledJob {
     private final ParkingSpotService spotService;
     private final ParkingRecordService recordService;
 
-    @Autowired
-    public ScheduledParkingJob(JobService jobService, ParkingLotService parkingService, ParkingSpotService spotService,
+    public ScheduledParkingJob(Job job, JobService jobService, ParkingLotService parkingService, ParkingSpotService spotService,
                                ParkingRecordService recordService) {
+        setJob(job);
         this.jobService = jobService;
         this.parkingService = parkingService;
         this.spotService = spotService;
@@ -48,13 +45,12 @@ public class ScheduledParkingJob extends ScheduledJob {
     }
 
     @Override
-    public boolean start(Job job) {
-        setJob(job);
+    public boolean start() {
         initSpotsStatus();
 
-        this.job.setStartTime(getSimulationTime());
-        this.job.setStatus(JobStatusEnum.Running);
-        jobService.update(this.job);
+        job.setStartTime(getSimulationTime());
+        job.setStatus(JobStatusEnum.Running);
+        jobService.update(job);
 
         try {
             int delay = getAverageOfOccupiedTime();
@@ -67,16 +63,12 @@ public class ScheduledParkingJob extends ScheduledJob {
         }
     }
 
-
     @Override
-    public boolean stop(Job job) {
-        if(this.job == null) {
-            setJob(job);
-        }
+    public boolean stop() {
         try {
-            this.job.setEndTime(getSimulationTime());
-            this.job.setStatus(JobStatusEnum.Stopped);
-            jobService.update(this.job);
+            job.setEndTime(getSimulationTime());
+            job.setStatus(JobStatusEnum.Stopped);
+            jobService.update(job);
 
             resetTimer();
             return true;
@@ -108,8 +100,6 @@ public class ScheduledParkingJob extends ScheduledJob {
             spotService.update(spot);
             i++;
         }
-
-        // Save the first state of all spots in the record table
     }
 
     /**

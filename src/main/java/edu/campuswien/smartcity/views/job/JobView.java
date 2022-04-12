@@ -27,7 +27,7 @@ import com.vaadin.flow.router.RouterLink;
 import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.service.JobService;
 import edu.campuswien.smartcity.data.service.SimulationService;
-import edu.campuswien.smartcity.job.ScheduledParkingJob;
+import edu.campuswien.smartcity.job.JobManager;
 import edu.campuswien.smartcity.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,7 +48,7 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
 
     private final SimulationService simulationService;
     private final JobService jobService;
-    private final ScheduledParkingJob parkingJob;
+    private final JobManager jobManager;
 
     private Grid.Column<Job> simulationColumn;
     private Grid.Column<Job> intervalColumn;
@@ -59,10 +59,10 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
     private Grid.Column<Job> resultColumn;
 
     @Autowired
-    public JobView(SimulationService simulationService, JobService jobService, ScheduledParkingJob parkingJob) {
+    public JobView(SimulationService simulationService, JobService jobService, JobManager jobManager) {
         this.simulationService = simulationService;
         this.jobService = jobService;
-        this.parkingJob = parkingJob;
+        this.jobManager = jobManager;
 
         createGrid();
     }
@@ -164,18 +164,24 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
     }
 
     private void startJob(Job job) {
-        parkingJob.start(job);
-        UI.getCurrent().getPage().reload();
+        boolean isStarted = jobManager.startJob(job);
+        if(isStarted) {
+            //TODO notification
+            UI.getCurrent().getPage().reload();
+        }
     }
 
     private void restartJob(Job job) {
-        parkingJob.start(job);
-        UI.getCurrent().getPage().reload();
+        //TODO do different
+        startJob(job);
     }
 
     private void stopJob(Job job) {
-        parkingJob.stop(job);
-        UI.getCurrent().getPage().reload();
+        boolean isStopped = jobManager.stopJob(job);
+        if(isStopped) {
+            //TODO notification
+            UI.getCurrent().getPage().reload();
+        }
     }
 
 
