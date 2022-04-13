@@ -9,10 +9,7 @@ import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.ParkingRecordService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,15 +43,14 @@ public class ScheduledParkingJob extends ScheduledJob {
 
     @Override
     public boolean start() {
-        initSpotsStatus();
-
-        job.setStartTime(getSimulationTime());
+        job.setStartTime(LocalDateTime.now());
         job.setStatus(JobStatusEnum.Running);
         jobService.update(job);
 
         try {
-            int delay = getAverageOfOccupiedTime();
-            schedule(new ParkingTimerTask(), delay);
+            initSpotsStatus();
+
+            schedule(new ParkingTimerTask(), getAverageOfOccupiedTime());
             return true;
         } catch (Exception e) {
             //TODO exception
@@ -87,7 +83,7 @@ public class ScheduledParkingJob extends ScheduledJob {
 
         // As a default, some spots are set to occupied (status=true).
         //to prevent to choose a spot two times
-        List<Long> selectedSpots = new ArrayList<Long>();
+        List<Long> selectedSpots = new ArrayList<>();
         for (int i = 0; i < parkingLot.getNumberOfOccupiedAtStart();) {
             int rndSpot = random(0, parkingLot.getCapacity() - 1);
             ParkingSpot spot = job.getSpots().get(rndSpot);
@@ -106,13 +102,13 @@ public class ScheduledParkingJob extends ScheduledJob {
      * Generates spots for given job and parking lot. If the given job has spots, then removes them and generates again
      */
     private void generateSpots() {
-        LocalDateTime dateTime = getSimulationTime();
+        LocalDateTime dateTime = LocalDateTime.now();
         if (!job.getSpots().isEmpty()) {
             job.getSpots().clear();
         }
 
         String name = parkingLot.getName();
-        List<ParkingSpot> spots = new ArrayList<ParkingSpot>();
+        List<ParkingSpot> spots = new ArrayList<>();
         for (long i = parkingLot.getStartId(); i < parkingLot.getCapacity() + parkingLot.getStartId(); i++) {
             ParkingSpot spot = new ParkingSpot();
             spot.setJob(job);
@@ -131,12 +127,26 @@ public class ScheduledParkingJob extends ScheduledJob {
     }
 
     private LocalDateTime getSimulationTime() {
-        return LocalDateTime.now();
+        long startTime = job.getStartTime().atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
+        long currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
+
+        long diff = currentTime - startTime;
+        Duration convertedDiff = Duration.ofMillis(Double.valueOf(diff / simulation.getTimeUnit()).longValue());
+
+        return job.getStartTime().plusSeconds(convertedDiff.toSeconds());
     }
 
-    private int getAverageOfOccupiedTime() {
+    private long getAverageOfOccupiedTime() {
         List<TimeBasedData> occupiedTimes = parkingService.findAllTimeBased4Occupied(parkingLot);
-        return findCurrentTimeBasedData(occupiedTimes);
+        int currentTimeBasedData = findCurrentTimeBasedData(occupiedTimes);
+        // change the time based on the TimeUnit of the simulation
+        long millis = Duration.ofMinutes(currentTimeBasedData).toMillis();
+        long convertedTime = Double.valueOf(millis * simulation.getTimeUnit()).longValue();
+        return convertedTime;
     }
 
     private int getAverageOfRequestNumber() {
@@ -197,7 +207,7 @@ public class ScheduledParkingJob extends ScheduledJob {
             // updates/changes number of spots
             int numberOfVehicles = getAverageOfRequestNumber();
             //to prevent to choose a spot two times
-            List<Long> selectedSpots = new ArrayList<Long>();
+            List<Long> selectedSpots = new ArrayList<>();
             for (int i = 0; i < numberOfVehicles;) {
                 int rndSpot = random(0, parkingLot.getCapacity() - 1);
                 ParkingSpot spot = job.getSpots().get(rndSpot);

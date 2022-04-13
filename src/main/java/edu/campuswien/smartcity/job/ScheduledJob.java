@@ -1,7 +1,5 @@
 package edu.campuswien.smartcity.job;
 
-import edu.campuswien.smartcity.data.entity.Job;
-
 import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -30,11 +28,11 @@ public abstract class ScheduledJob {
         }
     }
 
-    public void schedule(TimerTask task, int delay) {
+    public void schedule(TimerTask task, long delay) {
         if (executorService == null) {
             executorService = Executors.newScheduledThreadPool(2);
         }
-        executorService.schedule(task, delay, TimeUnit.MINUTES);
+        executorService.schedule(task, delay, TimeUnit.MILLISECONDS);
     }
 
     public int random(int min, int max) {
