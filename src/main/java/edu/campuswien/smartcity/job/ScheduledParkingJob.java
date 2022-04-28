@@ -127,17 +127,7 @@ public class ScheduledParkingJob extends ScheduledJob {
     }
 
     private LocalDateTime getSimulationTime() {
-        long startTime = job.getStartTime().atZone(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli();
-        long currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
-                .toInstant()
-                .toEpochMilli();
-
-        long diff = currentTime - startTime;
-        Duration convertedDiff = Duration.ofMillis(Double.valueOf(diff / simulation.getTimeUnit()).longValue());
-
-        return job.getStartTime().plusSeconds(convertedDiff.toSeconds());
+        return JobUtil.getCurrentSimulationTime(job.getStartTime(), simulation.getTimeUnit());
     }
 
     private long getAverageOfOccupiedTime() {
