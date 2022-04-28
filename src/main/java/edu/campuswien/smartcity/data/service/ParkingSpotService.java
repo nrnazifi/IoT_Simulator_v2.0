@@ -1,5 +1,6 @@
 package edu.campuswien.smartcity.data.service;
 
+import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
 import edu.campuswien.smartcity.data.entity.ParkingSpot;
 import edu.campuswien.smartcity.data.repository.ParkingSpotRepository;
@@ -30,6 +31,10 @@ public class ParkingSpotService  extends CrudService<ParkingSpot, Long> {
 
     public List<ParkingSpot> list(ParkingLot parkingLot) {
         return this.repository.findAllByParkingLot(parkingLot);
+    }
+
+    public List<ParkingSpot> list(Job job) {
+        return this.repository.findAllByJob(job);
     }
 
     public boolean removeAll(ArrayList<ParkingSpot> spots) {

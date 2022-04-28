@@ -23,12 +23,14 @@ import com.vaadin.flow.data.renderer.NumberRenderer;
 import com.vaadin.flow.data.renderer.TextRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.router.RouterLink;
 import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.service.JobService;
 import edu.campuswien.smartcity.data.service.SimulationService;
 import edu.campuswien.smartcity.job.JobManager;
 import edu.campuswien.smartcity.views.MainLayout;
+import edu.campuswien.smartcity.views.report.JobReportView;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.NumberFormat;
@@ -159,6 +161,7 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
             Span text = new Span("Explore");
             text.addClassNames("font-medium", "text-s");
             link.add(new MainLayout.MenuItemInfo.LineAwesomeIcon("la la-chart-area"), text);
+            link.setRoute(JobReportView.class, new RouteParameters("jobId", job.getId().toString()));
             return link;
         }).setHeader("Result").setAutoWidth(true).setFlexGrow(0);
     }

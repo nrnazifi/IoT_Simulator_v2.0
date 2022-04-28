@@ -21,7 +21,7 @@ public class ParkingSpot extends AbstractEntity {
     private Job job;
 
     @Column
-    private Boolean status;
+    private Boolean status; // true means occupied and false is vacant
 
     @Column
     private LocalDateTime lastChangedTime;
