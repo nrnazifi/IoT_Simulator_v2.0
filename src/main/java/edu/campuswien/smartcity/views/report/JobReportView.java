@@ -9,6 +9,7 @@ import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.*;
+import edu.campuswien.smartcity.config.Constants;
 import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
 import edu.campuswien.smartcity.data.entity.ParkingSpot;
@@ -98,19 +99,19 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
 
         txtJobName.setText(job.getSimulation().getName());
         txtJobStatus.setText(job.getStatus().getText());
-        txtJobStartTime.setText(job.getStartTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+        txtJobStartTime.setText(job.getStartTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
 
         switch (job.getStatus()) {
             case Running:
                 txtJobStatus.addClassName("text-success");
                 txtJobEndTimeLabel.setText("Current time");
                 LocalDateTime currentTime = JobUtil.getCurrentSimulationTime(job.getStartTime(), job.getSimulation().getTimeUnit());
-                txtJobEndTime.setText(currentTime.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+                txtJobEndTime.setText(currentTime.format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
                 break;
             case Stopped:
                 txtJobStatus.addClassName("text-error");
                 txtJobEndTimeLabel.setText("End time");
-                txtJobEndTime.setText(job.getEndTime().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+                txtJobEndTime.setText(job.getEndTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
                 break;
             case Paused:
             case NotYetRun:
@@ -159,7 +160,7 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
         String[] labels = {};
         switch (chartTimeType) {
             case Days:
-                labels = durationResult.stream().map(e -> e.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))).toArray(String[]::new);
+                labels = durationResult.stream().map(e -> e.getDate().format(DateTimeFormatter.ofPattern(Constants.DAY_DATE_FORMAT))).toArray(String[]::new);
                 break;
             case DayOfWeek:
                 labels = durationResult.stream().map(DurationMinuteAverage::getDayOfWeek).toArray(String[]::new);
@@ -179,7 +180,7 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
         String[] labels = {};
         switch (chartTimeType) {
             case Days:
-                labels = requestResult.stream().map(e -> e.getDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))).toArray(String[]::new);
+                labels = requestResult.stream().map(e -> e.getDate().format(DateTimeFormatter.ofPattern(Constants.DAY_DATE_FORMAT))).toArray(String[]::new);
                 break;
             case DayOfWeek:
                 labels = requestResult.stream().map(RequestNumber::getDayOfWeek).toArray(String[]::new);

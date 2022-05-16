@@ -25,6 +25,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteParameters;
 import com.vaadin.flow.router.RouterLink;
+import edu.campuswien.smartcity.config.Constants;
 import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.service.JobService;
 import edu.campuswien.smartcity.data.service.SimulationService;
@@ -113,10 +114,10 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
 
     private void createTimeColumn() {
         startTimeColumn = grid
-                .addColumn(new LocalDateTimeRenderer<>(job -> job.getStartTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
+                .addColumn(new LocalDateTimeRenderer<>(job -> job.getStartTime(), DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)))
                 .setComparator(job -> job.getStartTime()).setHeader("Start Time").setAutoWidth(true).setFlexGrow(0);
         endTimeColumn = grid
-                .addColumn(new LocalDateTimeRenderer<>(job -> job.getEndTime(), DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")))
+                .addColumn(new LocalDateTimeRenderer<>(job -> job.getEndTime(), DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)))
                 .setComparator(job -> job.getEndTime()).setHeader("End Time").setAutoWidth(true).setFlexGrow(0);
     }
 

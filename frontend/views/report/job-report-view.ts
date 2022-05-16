@@ -59,8 +59,8 @@ export class JobReportView extends LitElement {
             <vaadin-vertical-layout class="p-l" theme="spacing-l">
               <vaadin-horizontal-layout class="justify-between w-full">
                 <vaadin-vertical-layout>
-                  <h2 class="text-xl m-0">View events</h2>
-                  <span class="text-secondary text-xs">Cumulative (city/month)</span>
+                  <h2 class="text-xl m-0">Average of Duration time</h2>
+                  <span class="text-secondary text-xs">Minute/Time</span>
                 </vaadin-vertical-layout>
                 <vaadin-select id="ddlDurationChartTimes" style="width: 140px;"> </vaadin-select>
               </vaadin-horizontal-layout>
@@ -71,8 +71,8 @@ export class JobReportView extends LitElement {
             <vaadin-vertical-layout class="p-l" theme="spacing-l">
               <vaadin-horizontal-layout class="justify-between w-full">
                 <vaadin-vertical-layout>
-                  <h2 class="text-xl m-0">View events</h2>
-                  <span class="text-secondary text-xs">Cumulative (city/month)</span>
+                  <h2 class="text-xl m-0">Number of requests</h2>
+                  <span class="text-secondary text-xs">Number/Time</span>
                 </vaadin-vertical-layout>
                 <vaadin-select id="ddlRequestChartTimes" style="width: 140px;"> </vaadin-select>
               </vaadin-horizontal-layout>
