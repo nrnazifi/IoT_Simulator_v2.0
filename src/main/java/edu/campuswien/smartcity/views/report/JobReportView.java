@@ -236,7 +236,7 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
             String name = job.getSimulation().getName() + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)) + ".csv";
             FileWriter out = new FileWriter(name);
             CSVFormat format = CSVFormat.DEFAULT.builder()
-                    .setHeader("DeviceId", "ArrivalTime", "DepartureTime", "DurationSeconds", "VehiclePresent")
+                    .setHeader("deviceid", "arrivaltime", "departuretime", "durationseconds", "vehiclepresent")
                     .setEscape('\\')
                     .setQuoteMode(QuoteMode.ALL)
                     .build();
