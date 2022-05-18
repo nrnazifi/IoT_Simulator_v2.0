@@ -25,6 +25,7 @@ export class SimulationViewCard extends LitElement {
         <p class="my-m" id="text"></p>
         <div class="panel-footer w-full">
             <vaadin-horizontal-layout theme="spacing-s" class="actions" style="align-items: center; justify-content: flex-end">
+                <span id="duplicate" title="Duplicate"><iron-icon class="icon" icon="vaadin:copy-o"></iron-icon></span>
                 <span id="edit" title="Edit"><iron-icon class="icon" icon="vaadin:pencil"></iron-icon></span>
                 <span id="delete" title="Delete"><iron-icon class="icon" icon="vaadin:trash"></iron-icon></span>
             </vaadin-horizontal-layout>

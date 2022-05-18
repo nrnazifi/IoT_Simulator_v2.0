@@ -101,4 +101,21 @@ public class SimulationView extends LitTemplate implements HasComponents, HasSty
         jobService.update(job);
     }
 
+    public void onDuplicate(Simulation original) {
+        Simulation copy = new Simulation();
+        copy.setName("Copy of " + original.getName());
+        copy.setDescription(original.getDescription());
+        copy.setParkingLot(original.getParkingLot());
+        copy.setTimeUnit(original.getTimeUnit());
+        copy.setScheduleTime(original.getScheduleTime());
+        copy.setScheduleNow(original.isScheduleNow());
+        copy.setOnDatabase(original.isOnDatabase());
+        copy.setOnServer(original.isOnServer());
+        copy.setEndpointUri(original.getEndpointUri());
+        copy.setProtocol(original.getProtocol());
+        copy.setDataFormat(original.getDataFormat());
+
+        simulationService.update(copy);
+        updateContent();
+    }
 }

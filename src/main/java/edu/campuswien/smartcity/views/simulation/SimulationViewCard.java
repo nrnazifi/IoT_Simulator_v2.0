@@ -31,6 +31,8 @@ public class SimulationViewCard extends LitTemplate {
     private Span delete;
     @Id
     private Span edit;
+    @Id
+    private Span duplicate;
 
     public SimulationViewCard(SimulationView mainView, Simulation simulation) {
         //this.image.setSrc("");
@@ -41,5 +43,6 @@ public class SimulationViewCard extends LitTemplate {
 
         edit.addClickListener(e -> mainView.onEdit(simulation));
         delete.addClickListener(e -> mainView.onDelete(simulation));
+        duplicate.addClickListener(e -> mainView.onDuplicate(simulation));
     }
 }

@@ -35,7 +35,7 @@ public class ParkingLotService extends CrudService<ParkingLot, Long> {
 
     @Override
     public ParkingLot update(ParkingLot entity) {
-        if(entity.getLastUpdatedTime() != null) {
+        if(entity.getLastUpdatedTime() == null) {
             entity.setLastUpdatedTime(LocalDateTime.now());
         }
         if(entity.getStartId() == null) {

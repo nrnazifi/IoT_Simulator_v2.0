@@ -12,12 +12,14 @@ import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.*;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
+import edu.campuswien.smartcity.data.entity.TimeBasedData;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
 import edu.campuswien.smartcity.data.service.TimeBasedDataService;
 import edu.campuswien.smartcity.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @PageTitle("Parking lot template")
@@ -39,8 +41,8 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
     @Id("itemList")
     private OrderedList orderedList;
 
-    private Dialog templateDialog = new Dialog();
-    private ParkingFormView parkingForm;
+    private final Dialog templateDialog = new Dialog();
+    private final ParkingFormView parkingForm;
 
     @Autowired
     public ParkingTemplateView(ParkingLotService parkingLotService, ParkingSpotService parkingSpotService, TimeBasedDataService timeBasedDataService) {
@@ -88,6 +90,7 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
 
     protected void onDelete(ParkingLot parkingLot) {
         parkingLotService.delete(parkingLot);
+        parkingLotService.removeAllTimeBasedData(parkingLot);
         updateContent();
     }
 
@@ -96,6 +99,33 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
     }
 
     protected void onDuplicate(ParkingLot parkingLot) {
+        ParkingLot copy = new ParkingLot();
+        copy.setName("Copy of " + parkingLot.getName());
+        copy.setCapacity(parkingLot.getCapacity());
+        copy.setStartId(parkingLot.getStartId());
+        copy.setNumberOfOccupiedAtStart(parkingLot.getNumberOfOccupiedAtStart());
+        copy.setDarkness(parkingLot.getDarkness());
+        copy.setDaylight(parkingLot.getDaylight());
+        copy.setDescription(parkingLot.getDescription());
+
+        parkingLotService.update(copy);
+
+        List<TimeBasedData> occupancyTimes = parkingLotService.findAllTimeBased4Occupied(parkingLot);
+        List<TimeBasedData> requestTimes = parkingLotService.findAllTimeBased4Request(parkingLot);
+        List<TimeBasedData> timeBasedDataList = new ArrayList<TimeBasedData>(occupancyTimes);
+        timeBasedDataList.addAll(requestTimes);
+
+        for (TimeBasedData timeData : timeBasedDataList) {
+            TimeBasedData copyTime = new TimeBasedData();
+            copyTime.setParentId(copy.getId());
+            copyTime.setParentFieldName(timeData.getParentFieldName());
+            copyTime.setDayType(timeData.getDayType());
+            copyTime.setValueDay(timeData.getValueDay());
+            copyTime.setValueNight(timeData.getValueNight());
+            timeBasedDataService.update(copyTime);
+        }
+
+        updateContent();
     }
 
     protected ParkingSpotService getParkingSpotService() {
