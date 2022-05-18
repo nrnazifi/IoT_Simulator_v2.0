@@ -54,6 +54,14 @@ export class JobReportView extends LitElement {
                 <span><span class="text-m capacity-badge"theme="badge error" id="txtJobVacant"></span></span>
               </vaadin-horizontal-layout>
             </vaadin-vertical-layout>
+
+            <vaadin-vertical-layout class="p-m">
+              <vaadin-horizontal-layout class="capacity-box">
+                <span class="text-m font-semibold">Export</span>
+                <vaadin-button id="exportCsv" theme="small">CSV</vaadin-button>
+              </vaadin-horizontal-layout>
+            </vaadin-vertical-layout>
+            
           </vaadin-board-row>
           <vaadin-board-row>
             <vaadin-vertical-layout class="p-l" theme="spacing-l">

@@ -32,6 +32,10 @@ public class ParkingRecordService extends CrudService<ParkingRecord, Long> {
         return this.getRepository().saveAndFlush(entity);
     }
 
+    public List<ParkingRecord> list(Long jobId) {
+        return repository.findAllByJobIdOrderByArrivalTime(jobId);
+    }
+
     public List<DurationMinuteAverage> findAverageOfDurations(Job job, ReportAggregationType aggregationType) {
         if(job == null || job.getId() == null) {
             return new ArrayList<>();

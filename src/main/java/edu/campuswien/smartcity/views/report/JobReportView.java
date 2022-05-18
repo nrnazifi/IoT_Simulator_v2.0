@@ -1,6 +1,7 @@
 package edu.campuswien.smartcity.views.report;
 
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.*;
 import com.vaadin.flow.component.dependency.JsModule;
@@ -12,6 +13,7 @@ import com.vaadin.flow.router.*;
 import edu.campuswien.smartcity.config.Constants;
 import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
+import edu.campuswien.smartcity.data.entity.ParkingRecord;
 import edu.campuswien.smartcity.data.entity.ParkingSpot;
 import edu.campuswien.smartcity.data.enums.ReportAggregationType;
 import edu.campuswien.smartcity.data.report.DurationMinuteAverage;
@@ -21,8 +23,14 @@ import edu.campuswien.smartcity.data.service.ParkingRecordService;
 import edu.campuswien.smartcity.data.service.ParkingSpotService;
 import edu.campuswien.smartcity.job.JobUtil;
 import edu.campuswien.smartcity.views.MainLayout;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.QuoteMode;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -51,6 +59,8 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
     private Span txtJobOccupancy;
     @Id("txtJobVacant")
     private Span txtJobVacant;
+    @Id("exportCsv")
+    private Button exportCsv;
 
     @Id("ddlDurationChartTimes")
     private Select<ReportAggregationType> ddlDurationChartTimes;
@@ -92,6 +102,8 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
     private void makeView() {
         setJobBaseInfo();
         setChartInfo();
+
+        exportCsv.addClickListener(e -> onExportCsv());
     }
 
     private void setJobBaseInfo() {
@@ -216,6 +228,38 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
         configuration.setTooltip(tooltip);
 
         chart.drawChart();
+    }
+
+    private void onExportCsv() {
+        List<ParkingRecord> records = recordService.list(job.getId());
+        try {
+            String name = job.getSimulation().getName() + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)) + ".csv";
+            FileWriter out = new FileWriter(name);
+            CSVFormat format = CSVFormat.DEFAULT.builder()
+                    .setHeader("DeviceId", "ArrivalTime", "DepartureTime", "DurationSeconds", "VehiclePresent")
+                    .setEscape('\\')
+                    .setQuoteMode(QuoteMode.ALL)
+                    .build();
+
+            try (CSVPrinter printer = new CSVPrinter(out, format)) {
+                //printer.printHeaders(new );
+                records.forEach(item -> {
+                    try {
+                        printer.printRecord(
+                                item.getDeviceId(),
+                                item.getArrivalTime(),
+                                item.getDepartureTime(),
+                                item.getDurationSeconds(),
+                                item.getStatus()
+                        );
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

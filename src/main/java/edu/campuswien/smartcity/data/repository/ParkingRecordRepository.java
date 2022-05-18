@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface ParkingRecordRepository extends JpaRepository<ParkingRecord, Long> {
 
+    public List<ParkingRecord> findAllByJobIdOrderByArrivalTime(Long jobId);
+
     @Query(value = "SELECT DATE(arrival_time) as date, AVG(duration_seconds)/60 as value, 'Days' as type " +
             "FROM parking_record where job_id = ?1 group by DATE(arrival_time)",
             nativeQuery = true)
