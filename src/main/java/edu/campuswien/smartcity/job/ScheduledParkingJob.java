@@ -130,13 +130,18 @@ public class ScheduledParkingJob extends ScheduledJob {
         return JobUtil.getCurrentSimulationTime(job.getStartTime(), simulation.getTimeUnit());
     }
 
+    /**
+     * Finds the set average in the DB and adjusts it with simulation timeUnit and finally generate an exponential random number,
+     * because the average of the duration in time series data is normally exponentially distributed
+     */
     private long getAverageOfOccupiedTime() {
         List<TimeBasedData> occupiedTimes = parkingService.findAllTimeBased4Occupied(parkingLot);
         int currentTimeBasedData = findCurrentTimeBasedData(occupiedTimes);
         // change the time based on the TimeUnit of the simulation
         long millis = Duration.ofMinutes(currentTimeBasedData).toMillis();
-        long convertedTime = Double.valueOf(millis * simulation.getTimeUnit()).longValue();
-        return convertedTime;
+        double convertedTime = millis * simulation.getTimeUnit();
+        long expRndTime = Math.round(randomExponential(convertedTime));
+        return expRndTime;
     }
 
     private int getAverageOfRequestNumber() {

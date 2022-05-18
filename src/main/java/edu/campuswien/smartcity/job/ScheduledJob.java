@@ -1,5 +1,8 @@
 package edu.campuswien.smartcity.job;
 
+import edu.campuswien.smartcity.config.Constants;
+import org.apache.commons.math3.distribution.ExponentialDistribution;
+
 import java.util.Random;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
@@ -38,6 +41,12 @@ public abstract class ScheduledJob {
     public int random(int min, int max) {
         Random r = new Random();
         return r.nextInt((max - min) + 1) + min;
+    }
+
+    public double randomExponential(double mean) {
+        ExponentialDistribution distribution = new ExponentialDistribution(Constants.RANDOM_GENERATOR_ALGORITHM, mean);
+
+        return distribution.sample();
     }
 
 }
