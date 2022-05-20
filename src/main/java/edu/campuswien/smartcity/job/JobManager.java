@@ -20,15 +20,17 @@ public class JobManager {
     private final ParkingLotService parkingService;
     private final ParkingSpotService spotService;
     private final ParkingRecordService recordService;
+    private final InternalLogger dbLogger;
 
     @Autowired
     public JobManager(SimulationService simulationService, JobService jobService, ParkingLotService parkingService,
-                      ParkingSpotService spotService, ParkingRecordService recordService) {
+                      ParkingSpotService spotService, ParkingRecordService recordService, InternalLogger dbLogger) {
         this.simulationService = simulationService;
         this.jobService = jobService;
         this.parkingService = parkingService;
         this.spotService = spotService;
         this.recordService = recordService;
+        this.dbLogger = dbLogger;
     }
 
     public ScheduledJob getScheduledJob(Job job) {
@@ -37,7 +39,7 @@ public class JobManager {
             scheduledJob = jobMap.get(job);
         } else {
             //TODO which typ of ScheduledJob must instanced
-            scheduledJob = new ScheduledParkingJob(job, jobService, parkingService, spotService, recordService);
+            scheduledJob = new ScheduledParkingJob(job, jobService, parkingService, spotService, recordService, dbLogger);
             jobMap.put(job, scheduledJob);
         }
 

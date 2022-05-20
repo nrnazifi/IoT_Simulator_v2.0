@@ -4,10 +4,10 @@ import edu.campuswien.smartcity.data.entity.*;
 import edu.campuswien.smartcity.data.enums.DayCategoryEnum;
 import edu.campuswien.smartcity.data.enums.DayTypeEnum;
 import edu.campuswien.smartcity.data.enums.JobStatusEnum;
-import edu.campuswien.smartcity.data.service.JobService;
-import edu.campuswien.smartcity.data.service.ParkingLotService;
-import edu.campuswien.smartcity.data.service.ParkingRecordService;
-import edu.campuswien.smartcity.data.service.ParkingSpotService;
+import edu.campuswien.smartcity.data.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
 
 import java.time.*;
 import java.util.ArrayList;
@@ -17,6 +17,8 @@ import java.util.TimerTask;
 
 public class ScheduledParkingJob extends ScheduledJob {
 
+    Logger LOGGER = LoggerFactory.getLogger(ScheduledParkingJob.class);
+
     private Job job;
     private Simulation simulation;
     private ParkingLot parkingLot;
@@ -25,14 +27,16 @@ public class ScheduledParkingJob extends ScheduledJob {
     private final ParkingLotService parkingService;
     private final ParkingSpotService spotService;
     private final ParkingRecordService recordService;
+    private final InternalLogger dbLogger;
 
     public ScheduledParkingJob(Job job, JobService jobService, ParkingLotService parkingService, ParkingSpotService spotService,
-                               ParkingRecordService recordService) {
+                               ParkingRecordService recordService, InternalLogger dbLogger) {
         setJob(job);
         this.jobService = jobService;
         this.parkingService = parkingService;
         this.spotService = spotService;
         this.recordService = recordService;
+        this.dbLogger = dbLogger;
     }
 
     public void setJob(Job job) {
@@ -51,6 +55,7 @@ public class ScheduledParkingJob extends ScheduledJob {
             initSpotsStatus();
 
             schedule(new ParkingTimerTask(), getAverageOfOccupiedTime());
+            LOGGER.info("Schedule Task: " + getSimulationTime());
             return true;
         } catch (Exception e) {
             //TODO exception
@@ -137,11 +142,19 @@ public class ScheduledParkingJob extends ScheduledJob {
     private long getAverageOfOccupiedTime() {
         List<TimeBasedData> occupiedTimes = parkingService.findAllTimeBased4Occupied(parkingLot);
         int currentTimeBasedData = findCurrentTimeBasedData(occupiedTimes);
+
+        double expRndTime = randomExponential(currentTimeBasedData);
+        dbLogger.log(new InternalLog(expRndTime, null), Level.INFO);
+        LOGGER.info("occupiedTimes (random): " + expRndTime);
+
+        double convertedTime = expRndTime * simulation.getTimeUnit();
+        LOGGER.info("occupiedTimes (converted): " + convertedTime);
+
         // change the time based on the TimeUnit of the simulation
-        long millis = Duration.ofMinutes(currentTimeBasedData).toMillis();
-        double convertedTime = millis * simulation.getTimeUnit();
-        long expRndTime = Math.round(randomExponential(convertedTime));
-        return expRndTime;
+        long millis = Duration.ofMinutes(Math.round(convertedTime)).toMillis();
+        LOGGER.info("occupiedTimes (ms): " + millis);
+
+        return millis;
     }
 
     private int getAverageOfRequestNumber() {
@@ -195,6 +208,7 @@ public class ScheduledParkingJob extends ScheduledJob {
     protected class ParkingTimerTask extends TimerTask {
         @Override
         public void run() {
+            LOGGER.info("Run Task: " + getSimulationTime());
             if (job.getSpots() == null || job.getSpots().isEmpty()) {
                 throw new RuntimeException("No spot is generated for parking lot " + parkingLot.getName());
             }
@@ -232,11 +246,15 @@ public class ScheduledParkingJob extends ScheduledJob {
                 record.setStatus(prevStatus);
                 recordService.update(record);
 
+                dbLogger.log(new InternalLog(null, duration.toMinutes()), Level.INFO);
+                LOGGER.info("Duration: " + duration.toMinutes());
+
                 i++;
             }
 
             // at the end calls schedule() again
             schedule(new ParkingTimerTask(), getAverageOfOccupiedTime());
+            LOGGER.info("Schedule Task: " + getSimulationTime());
         }
     }
 }
