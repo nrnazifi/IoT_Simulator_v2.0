@@ -33,7 +33,7 @@ public abstract class ScheduledJob {
 
     public void schedule(TimerTask task, long delay) {
         if (executorService == null) {
-            executorService = Executors.newScheduledThreadPool(2);
+            executorService = Executors.newScheduledThreadPool(100);
         }
         executorService.schedule(task, delay, TimeUnit.MILLISECONDS);
     }
@@ -43,10 +43,13 @@ public abstract class ScheduledJob {
         return r.nextInt((max - min) + 1) + min;
     }
 
+    /**
+     * Generates an exponential random number, because the average of the duration in time series data is normally exponentially distributed
+     */
     public double randomExponential(double mean) {
         ExponentialDistribution distribution = new ExponentialDistribution(Constants.RANDOM_GENERATOR_ALGORITHM, mean);
 
-        return distribution.sample();
+        return distribution.sample() + 1; //location is 1
     }
 
 }

@@ -25,4 +25,7 @@ public class ParkingSpot extends AbstractEntity {
 
     @Column
     private LocalDateTime lastChangedTime;
+
+    @Column
+    private Long scheduledTimeInMillis = 0l;
 }

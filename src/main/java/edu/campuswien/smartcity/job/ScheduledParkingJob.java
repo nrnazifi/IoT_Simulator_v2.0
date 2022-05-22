@@ -53,9 +53,7 @@ public class ScheduledParkingJob extends ScheduledJob {
 
         try {
             initSpotsStatus();
-
-            schedule(new ParkingTimerTask(), getAverageOfOccupiedTime());
-            LOGGER.info("Schedule Task: " + getSimulationTime());
+            scheduleAllSpots();
             return true;
         } catch (Exception e) {
             //TODO exception
@@ -121,6 +119,7 @@ public class ScheduledParkingJob extends ScheduledJob {
             spot.setDeviceId(name + "_" + i);
             spot.setStatus(false);
             spot.setLastChangedTime(dateTime);
+            spot.setScheduledTimeInMillis(0l);
             spots.add(spot);
             spotService.update(spot);
         }
@@ -135,26 +134,9 @@ public class ScheduledParkingJob extends ScheduledJob {
         return JobUtil.getCurrentSimulationTime(job.getStartTime(), simulation.getTimeUnit());
     }
 
-    /**
-     * Finds the set average in the DB and adjusts it with simulation timeUnit and finally generate an exponential random number,
-     * because the average of the duration in time series data is normally exponentially distributed
-     */
-    private long getAverageOfOccupiedTime() {
+    private int getAverageOfOccupiedTime() {
         List<TimeBasedData> occupiedTimes = parkingService.findAllTimeBased4Occupied(parkingLot);
-        int currentTimeBasedData = findCurrentTimeBasedData(occupiedTimes);
-
-        double expRndTime = randomExponential(currentTimeBasedData);
-        dbLogger.log(new InternalLog(expRndTime, null), Level.INFO);
-        LOGGER.info("occupiedTimes (random): " + expRndTime);
-
-        double convertedTime = expRndTime * simulation.getTimeUnit();
-        LOGGER.info("occupiedTimes (converted): " + convertedTime);
-
-        // change the time based on the TimeUnit of the simulation
-        long millis = Duration.ofMinutes(Math.round(convertedTime)).toMillis();
-        LOGGER.info("occupiedTimes (ms): " + millis);
-
-        return millis;
+        return findCurrentTimeBasedData(occupiedTimes);
     }
 
     private int getAverageOfRequestNumber() {
@@ -202,59 +184,95 @@ public class ScheduledParkingJob extends ScheduledJob {
             }
         }
 
-        throw new RuntimeException("Not found value: getAverageOfOccupiedTime()");
+        throw new RuntimeException("Not found value: findCurrentTimeBasedData()");
+    }
+
+    private double getRandomTime(int mean) {
+        double expRndTime = randomExponential(mean);
+        dbLogger.log(new InternalLog(expRndTime, null), Level.INFO);
+
+        double millis = expRndTime * 60 * 1000; // Min to Mills
+        return millis;
+    }
+
+    /**
+     * schedules all spots with an exp random time by using the current mean
+     * and runs a TimerTask with a delay of minimum generated random time to check all spots after that time
+     */
+    private void scheduleAllSpots() {
+        int mean = getAverageOfOccupiedTime();
+        long minTime = Integer.MAX_VALUE;
+        for(ParkingSpot spot : job.getSpots()) {
+            double expRndTime = getRandomTime(mean);
+
+            double convertedTime = JobUtil.convertWithTimeUnit(expRndTime, simulation.getTimeUnit());
+            long roundedTime = Math.round(convertedTime);
+
+            spot.setScheduledTimeInMillis(Math.round(expRndTime));
+            spotService.update(spot);
+
+            if(roundedTime < minTime) {
+                minTime = roundedTime;
+            }
+        }
+
+        schedule(new ParkingTimerTask(), minTime);
     }
 
     protected class ParkingTimerTask extends TimerTask {
         @Override
         public void run() {
-            LOGGER.info("Run Task: " + getSimulationTime());
             if (job.getSpots() == null || job.getSpots().isEmpty()) {
                 throw new RuntimeException("No spot is generated for parking lot " + parkingLot.getName());
             }
 
-            // updates/changes number of spots
-            int numberOfVehicles = getAverageOfRequestNumber();
-            //to prevent to choose a spot two times
-            List<Long> selectedSpots = new ArrayList<>();
-            for (int i = 0; i < numberOfVehicles;) {
-                int rndSpot = random(0, parkingLot.getCapacity() - 1);
-                ParkingSpot spot = job.getSpots().get(rndSpot);
-                if (selectedSpots.contains(spot.getId())) {
-                    continue;
-                }
+            LocalDateTime currentTime = getSimulationTime();
+            int mean = getAverageOfOccupiedTime();
+            long minTime = Integer.MAX_VALUE;
 
-                selectedSpots.add(spot.getId());
-                LocalDateTime currentTime = getSimulationTime();
+            for(ParkingSpot spot : job.getSpots()) {
                 LocalDateTime previousTime = spot.getLastChangedTime();
                 Duration duration = Duration.between(previousTime, currentTime);
-                Boolean prevStatus = spot.getStatus();
 
-                // update spot of this job
-                spot.setStatus(!prevStatus); //toggle status
-                spot.setLastChangedTime(currentTime);
-                spotService.update(spot);
+                if(spot.getScheduledTimeInMillis() <= duration.toMillis()) {
+                    Boolean prevStatus = spot.getStatus();
 
-                // create a new record for this change
-                ParkingRecord record = new ParkingRecord();
-                record.setJobId(job.getId());
-                record.setSpotId(spot.getId());
-                record.setDeviceId(spot.getDeviceId());
-                record.setArrivalTime(previousTime);
-                record.setDepartureTime(currentTime);
-                record.setDurationSeconds(duration.toSeconds());
-                record.setStatus(prevStatus);
-                recordService.update(record);
+                    // next random time
+                    double expRndTime = getRandomTime(mean);
+                    double convertedTime = JobUtil.convertWithTimeUnit(expRndTime, simulation.getTimeUnit());
+                    long roundedTime = Math.round(convertedTime);
 
-                dbLogger.log(new InternalLog(null, duration.toMinutes()), Level.INFO);
-                LOGGER.info("Duration: " + duration.toMinutes());
+                    // update spot of this job
+                    spot.setStatus(!prevStatus); //toggle status
+                    spot.setLastChangedTime(currentTime);
+                    spot.setScheduledTimeInMillis(Math.round(expRndTime));
+                    spotService.update(spot);
 
-                i++;
+                    // create a new record for this change
+                    ParkingRecord record = new ParkingRecord();
+                    record.setJobId(job.getId());
+                    record.setSpotId(spot.getId());
+                    record.setDeviceId(spot.getDeviceId());
+                    record.setArrivalTime(previousTime);
+                    record.setDepartureTime(currentTime);
+                    record.setDurationSeconds(duration.toSeconds());
+                    record.setStatus(prevStatus);
+                    recordService.update(record);
+
+                    if(roundedTime < minTime) {
+                        minTime = roundedTime;
+                    }
+                    dbLogger.log(new InternalLog(null, duration.toMinutes()), Level.INFO);
+                } else {
+                    long restTimeForSpot = spot.getScheduledTimeInMillis() - duration.toMillis();
+                    if(restTimeForSpot < minTime) {
+                        minTime = restTimeForSpot;
+                    }
+                }
             }
 
             // at the end calls schedule() again
-            schedule(new ParkingTimerTask(), getAverageOfOccupiedTime());
-            LOGGER.info("Schedule Task: " + getSimulationTime());
+            schedule(new ParkingTimerTask(), minTime);
         }
     }
 }
