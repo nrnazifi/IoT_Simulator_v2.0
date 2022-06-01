@@ -111,19 +111,20 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
 
         txtJobName.setText(job.getSimulation().getName());
         txtJobStatus.setText(job.getStatus().getText());
-        txtJobStartTime.setText(job.getStartTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
+        txtJobStartTime.setText(job.getJobStartTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
 
         switch (job.getStatus()) {
             case Running:
                 txtJobStatus.addClassName("text-success");
                 txtJobEndTimeLabel.setText("Current time");
-                LocalDateTime currentTime = JobUtil.getCurrentSimulationTime(job.getStartTime(), job.getSimulation().getTimeUnit());
+                LocalDateTime currentTime = JobUtil.getCurrentSimulationTime(job.getJobStartTime(),
+                        job.getSimulationStartTime(), job.getSimulation().getTimeUnit());
                 txtJobEndTime.setText(currentTime.format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
                 break;
             case Stopped:
                 txtJobStatus.addClassName("text-error");
                 txtJobEndTimeLabel.setText("End time");
-                txtJobEndTime.setText(job.getEndTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
+                txtJobEndTime.setText(job.getJobEndTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
                 break;
             case Paused:
             case NotYetRun:

@@ -25,9 +25,16 @@ public class Simulation extends AbstractEntity {
     private String description;
 
     @Column(columnDefinition = "boolean default true")
-    private boolean scheduleNow = true;
+    private boolean scheduleNow = true; //true if job will be run immediately (now)
     @Column
     private LocalDateTime scheduleTime;
+
+    @Column(columnDefinition = "boolean default false")
+    private boolean customizeSimulationTime = false; //true if job must simulate data in another time (in the future/past)
+    @Column
+    private LocalDateTime simulationStartTime;
+    @Column
+    private LocalDateTime simulationEndTime;
 
     @Column(columnDefinition = "double default 1.0")
     private double timeUnit = 1.0;

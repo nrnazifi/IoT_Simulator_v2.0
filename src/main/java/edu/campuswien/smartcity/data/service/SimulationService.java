@@ -1,6 +1,5 @@
 package edu.campuswien.smartcity.data.service;
 
-import edu.campuswien.smartcity.data.entity.ParkingLot;
 import edu.campuswien.smartcity.data.entity.Simulation;
 import edu.campuswien.smartcity.data.repository.SimulationRepository;
 import org.springframework.beans.factory.annotation.Autowired;

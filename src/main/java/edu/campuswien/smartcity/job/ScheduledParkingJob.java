@@ -47,33 +47,43 @@ public class ScheduledParkingJob extends ScheduledJob {
 
     @Override
     public boolean start() {
-        job.setStartTime(LocalDateTime.now());
-        job.setStatus(JobStatusEnum.Running);
-        jobService.update(job);
+        if(simulation.isScheduleNow()) {
+            job.setJobStartTime(LocalDateTime.now());
+            if(simulation.isCustomizeSimulationTime() && simulation.getSimulationStartTime() != null) {
+                job.setSimulationStartTime(simulation.getSimulationStartTime());
+            } else {
+                job.setSimulationStartTime(job.getJobStartTime());
+            }
+            job.setStatus(JobStatusEnum.Running);
+            jobService.update(job);
 
-        try {
-            initSpotsStatus();
-            scheduleAllSpots();
-            return true;
-        } catch (Exception e) {
-            //TODO exception
-            e.printStackTrace();
-            return false;
+            try {
+                initSpotsStatus();
+                scheduleAllSpots();
+                scheduleStopTime();
+                return true;
+            } catch (Exception e) {
+                LOGGER.error("ScheduledParkingJob.start()", e);
+                return false;
+            }
+        } else {
+            //TODO must be implemented a TimerTask for future!
         }
+        return false;
     }
 
     @Override
     public boolean stop() {
         try {
-            job.setEndTime(getSimulationTime());
+            job.setJobEndTime(LocalDateTime.now());
+            job.setSimulationEndTime(getSimulationTime());
             job.setStatus(JobStatusEnum.Stopped);
             jobService.update(job);
 
             resetTimer();
             return true;
         } catch (Exception e) {
-            //TODO exception
-            e.printStackTrace();
+            LOGGER.error("ScheduledParkingJob.stop()", e);
             return false;
         }
     }
@@ -105,7 +115,6 @@ public class ScheduledParkingJob extends ScheduledJob {
      * Generates spots for given job and parking lot. If the given job has spots, then removes them and generates again
      */
     private void generateSpots() {
-        LocalDateTime dateTime = LocalDateTime.now();
         if (!job.getSpots().isEmpty()) {
             job.getSpots().clear();
         }
@@ -118,7 +127,7 @@ public class ScheduledParkingJob extends ScheduledJob {
             spot.setParkingLot(parkingLot);
             spot.setDeviceId(name + "_" + i);
             spot.setStatus(false);
-            spot.setLastChangedTime(dateTime);
+            spot.setLastChangedTime(job.getSimulationStartTime());
             spot.setScheduledTimeInMillis(0l);
             spots.add(spot);
             spotService.update(spot);
@@ -130,8 +139,14 @@ public class ScheduledParkingJob extends ScheduledJob {
         job = reloadJob.get();
     }
 
+    private void scheduleStopTime() {
+        if(simulation.isCustomizeSimulationTime() && simulation.getSimulationEndTime() != null) {
+            //TODO run a TimerTask for stopping the job
+        }
+    }
+
     private LocalDateTime getSimulationTime() {
-        return JobUtil.getCurrentSimulationTime(job.getStartTime(), simulation.getTimeUnit());
+        return JobUtil.getCurrentSimulationTime(job.getJobStartTime(), job.getSimulationStartTime(), simulation.getTimeUnit());
     }
 
     private int getAverageOfOccupiedTime() {
@@ -158,6 +173,9 @@ public class ScheduledParkingJob extends ScheduledJob {
                 dayType = DayTypeEnum.General;
             } else if (category.equals(DayCategoryEnum.WorkRestTime)) {
                 //TODO: add holidays later
+                /*if (condition) {
+                    dayType = DayTypeEnum.Holiday;
+                } else*/
                 if (simDateTime.getDayOfWeek().equals(DayOfWeek.SATURDAY) || simDateTime.getDayOfWeek().equals(DayOfWeek.SUNDAY)) {
                     dayType = DayTypeEnum.Weekend;
                 } else {
@@ -176,10 +194,10 @@ public class ScheduledParkingJob extends ScheduledJob {
 
             if ((simTime.isAfter(parkingLot.getDaylight()) || simTime.equals(parkingLot.getDaylight()))
                     && simTime.isBefore(parkingLot.getDarkness())) {
-                //Daylight
+                //Daylight or in day
                 return currentTimeData.getValueDay();
             } else {
-                //Darkness
+                //Darkness or at night
                 return currentTimeData.getValueNight();
             }
         }
@@ -187,6 +205,10 @@ public class ScheduledParkingJob extends ScheduledJob {
         throw new RuntimeException("Not found value: findCurrentTimeBasedData()");
     }
 
+    /**
+     * @param mean is in minute
+     * @return a random number in millisecond
+     */
     private double getRandomTime(int mean) {
         double expRndTime = randomExponential(mean);
         dbLogger.log(new InternalLog(expRndTime, null), Level.INFO);
@@ -233,6 +255,9 @@ public class ScheduledParkingJob extends ScheduledJob {
             for(ParkingSpot spot : job.getSpots()) {
                 LocalDateTime previousTime = spot.getLastChangedTime();
                 Duration duration = Duration.between(previousTime, currentTime);
+                if (duration.isNegative()) {
+                    LOGGER.warn("ParkingTimerTask: Diff of previousTime and currentTime must be always positive!");
+                }
 
                 if(spot.getScheduledTimeInMillis() <= duration.toMillis()) {
                     Boolean prevStatus = spot.getStatus();

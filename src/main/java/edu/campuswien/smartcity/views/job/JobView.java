@@ -114,11 +114,11 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
 
     private void createTimeColumn() {
         startTimeColumn = grid
-                .addColumn(new LocalDateTimeRenderer<>(job -> job.getStartTime(), DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)))
-                .setComparator(job -> job.getStartTime()).setHeader("Start Time").setAutoWidth(true).setFlexGrow(0);
+                .addColumn(new LocalDateTimeRenderer<>(job -> job.getJobStartTime(), DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)))
+                .setComparator(job -> job.getJobStartTime()).setHeader("Start Time").setAutoWidth(true).setFlexGrow(0);
         endTimeColumn = grid
-                .addColumn(new LocalDateTimeRenderer<>(job -> job.getEndTime(), DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)))
-                .setComparator(job -> job.getEndTime()).setHeader("End Time").setAutoWidth(true).setFlexGrow(0);
+                .addColumn(new LocalDateTimeRenderer<>(job -> job.getJobEndTime(), DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)))
+                .setComparator(job -> job.getJobEndTime()).setHeader("End Time").setAutoWidth(true).setFlexGrow(0);
     }
 
     private void createActionColumn() {

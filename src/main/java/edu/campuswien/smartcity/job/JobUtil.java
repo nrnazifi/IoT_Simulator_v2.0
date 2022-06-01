@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 public class JobUtil {
-    public static LocalDateTime getCurrentSimulationTime(LocalDateTime startTime, double timeUnit) {
-        long baseTime = startTime.atZone(ZoneId.systemDefault())
+    public static LocalDateTime getCurrentSimulationTime(LocalDateTime jobStartTime, LocalDateTime simStartTime, double timeUnit) {
+        long baseTime = jobStartTime.atZone(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli();
         long currentTime = LocalDateTime.now().atZone(ZoneId.systemDefault())
@@ -17,7 +17,7 @@ public class JobUtil {
         double converted = convertBackWithTimeUnit(diff, timeUnit);
         Duration convertedDiff = Duration.ofMillis(Double.valueOf(converted).longValue());
 
-        return startTime.plusSeconds(convertedDiff.toSeconds());
+        return simStartTime.plusSeconds(convertedDiff.toSeconds());
     }
 
     /**

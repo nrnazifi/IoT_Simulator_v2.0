@@ -43,6 +43,8 @@ import java.util.List;
 public class SimulationFormView extends LitTemplate {
     private static final long serialVersionUID = 7738014728161920822L;
 
+    private static final String SIMULATION_WITH_START_TIME = "Current";
+    private static final String SIMULATION_WITH_CUSTOMIZE_TIME = "Customize";
     private static final String SCHEDULING_NOW = "Now";
     private static final String SCHEDULING_LATER = "Later";
     private static final String STORAGE_ON_DATABASE = "on Database";
@@ -58,6 +60,12 @@ public class SimulationFormView extends LitTemplate {
     private NumberField timeUnit;
     @Id("calculationTimeUnit")
     private Span calculationTimeUnit;
+    @Id("simulationTimeRadio")
+    private RadioButtonGroup<String> simulationTimeRadio;
+    @Id("simulationStartTime")
+    private DateTimePicker simulationStartTime;
+    @Id("simulationEndTime")
+    private DateTimePicker simulationEndTime;
     @Id("schedulingRadio")
     private RadioButtonGroup<String> schedulingRadio;
     @Id("schedulingDateTime")
@@ -112,8 +120,16 @@ public class SimulationFormView extends LitTemplate {
         btnSaveRun.addClickListener(e -> saveAndRun());
         btnDelete.addClickListener(e -> delete());
 
+        simulationTimeRadio.setItems(SIMULATION_WITH_START_TIME, SIMULATION_WITH_CUSTOMIZE_TIME);
+        simulationTimeRadio.setRenderer(new ComponentRenderer<>(item -> new Text(item + " time")));
+        simulationStartTime.setVisible(false);
+        simulationEndTime.setVisible(false);
+        simulationTimeRadio.addValueChangeListener(e -> {
+            simulationStartTime.setVisible(e.getValue().equals(SIMULATION_WITH_CUSTOMIZE_TIME));
+            simulationEndTime.setVisible(e.getValue().equals(SIMULATION_WITH_CUSTOMIZE_TIME));
+        });
+
         schedulingRadio.setItems(SCHEDULING_NOW, SCHEDULING_LATER);
-        //schedulingRadio.setValue("Now");
         schedulingRadio.setRenderer(new ComponentRenderer<>(item -> new Text("Schedule " + item)));
         schedulingDateTime.setVisible(false);
         schedulingRadio.addValueChangeListener(e -> {
@@ -140,6 +156,16 @@ public class SimulationFormView extends LitTemplate {
             setVisible(true);
             name.focus();
             parkingLots.setValue(simulation.getParkingLot());
+            //set simulation timing
+            if(simulation.isCustomizeSimulationTime()) {
+                simulationTimeRadio.setValue(SIMULATION_WITH_CUSTOMIZE_TIME);
+                simulationStartTime.setValue(simulation.getSimulationStartTime());
+                simulationEndTime.setValue(simulation.getSimulationEndTime());
+            } else {
+                simulationTimeRadio.setValue(SIMULATION_WITH_START_TIME);
+                simulationStartTime.setValue(null);
+                simulationEndTime.setValue(null);
+            }
             //set Scheduling
             if(simulation.isScheduleNow()) {
                 schedulingRadio.setValue(SCHEDULING_NOW);
@@ -182,6 +208,12 @@ public class SimulationFormView extends LitTemplate {
         Simulation simulation = binder.getBean();
         //update fields in the entity
         simulation.setParkingLot(parkingLots.getValue());
+
+        boolean isSimTimeCustomized = simulationTimeRadio.getValue().equals(SIMULATION_WITH_CUSTOMIZE_TIME);
+        simulation.setCustomizeSimulationTime(isSimTimeCustomized);
+        simulation.setSimulationStartTime(isSimTimeCustomized ? simulationStartTime.getValue() : null);
+        simulation.setSimulationEndTime(isSimTimeCustomized ? simulationEndTime.getValue() : null);
+
         simulation.setScheduleNow(schedulingRadio.getValue().equals(SCHEDULING_NOW));
         simulation.setScheduleTime(schedulingRadio.getValue().equals(SCHEDULING_NOW) ? null : schedulingDateTime.getValue());
         simulation.setOnDatabase(storageCheckBox.getValue().contains(STORAGE_ON_DATABASE));

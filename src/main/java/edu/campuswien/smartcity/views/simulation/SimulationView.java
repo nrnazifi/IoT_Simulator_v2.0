@@ -95,8 +95,8 @@ public class SimulationView extends LitTemplate implements HasComponents, HasSty
         Job job = new Job();
         job.setSimulation(simulation);
         job.setStatus(JobStatusEnum.NotYetRun);
-        job.setStartTime(LocalDateTime.now());//TODO enter on the UI
-        job.setEndTime(null);
+        job.setJobStartTime(null);
+        job.setJobEndTime(null);
 
         jobService.update(job);
     }

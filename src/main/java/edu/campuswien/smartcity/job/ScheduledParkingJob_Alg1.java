@@ -47,7 +47,7 @@ public class ScheduledParkingJob_Alg1 extends ScheduledJob {
 
     @Override
     public boolean start() {
-        job.setStartTime(LocalDateTime.now());
+        job.setJobStartTime(LocalDateTime.now());
         job.setStatus(JobStatusEnum.Running);
         jobService.update(job);
 
@@ -67,7 +67,7 @@ public class ScheduledParkingJob_Alg1 extends ScheduledJob {
     @Override
     public boolean stop() {
         try {
-            job.setEndTime(getSimulationTime());
+            job.setJobEndTime(getSimulationTime());
             job.setStatus(JobStatusEnum.Stopped);
             jobService.update(job);
 
@@ -132,7 +132,7 @@ public class ScheduledParkingJob_Alg1 extends ScheduledJob {
     }
 
     private LocalDateTime getSimulationTime() {
-        return JobUtil.getCurrentSimulationTime(job.getStartTime(), simulation.getTimeUnit());
+        return null; //todo JobUtil.getCurrentSimulationTime(job.getJobStartTime(), simulation.getTimeUnit());
     }
 
     /**

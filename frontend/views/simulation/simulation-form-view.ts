@@ -31,11 +31,21 @@ export class SimulationFormView extends LitElement {
             <vaadin-form-layout style="width: 100%;">
                 <vaadin-text-field label="Name" id="name"></vaadin-text-field>
                 <vaadin-combo-box label="Parking lot" id="parkingLots"></vaadin-combo-box>
-                <vaadin-number-field label="Time Unit" id="timeUnit" helper-text="The factor defines how much real time passes with each step of simulation time"></vaadin-number-field>
+                <vaadin-number-field label="Time Unit" id="timeUnit" 
+                                     helper-text="The factor defines how much real time passes with each step of simulation time"></vaadin-number-field>
                 <span id="calculationTimeUnit">A unit of simulation time will take</span>
-               
+
                 <hr colspan="2"/>
-                <vaadin-radio-group id="schedulingRadio" label="Scheduling" theme="horizontal" helper-text="You could run this simulation right away or in future"></vaadin-radio-group>
+                <vaadin-radio-group id="simulationTimeRadio" label="Simulation Start/End Time" theme="vertical" 
+                                    helper-text="With this configuration the data are simulated for a specific time in the past or future"></vaadin-radio-group>
+                <vaadin-vertical-layout>
+                    <vaadin-date-time-picker id="simulationStartTime" label="StartTime"></vaadin-date-time-picker>
+                    <vaadin-date-time-picker id="simulationEndTime" label="EndTime" helper-text="The simulation will be stopped at this time."></vaadin-date-time-picker>
+                </vaadin-vertical-layout>
+                
+                <hr colspan="2"/>
+                <vaadin-radio-group id="schedulingRadio" label="Scheduling" theme="horizontal" 
+                                    helper-text="You could run this simulation right away or in future"></vaadin-radio-group>
                 <vaadin-date-time-picker id="schedulingDateTime"></vaadin-date-time-picker>
                 
                 <hr colspan="2"/>
