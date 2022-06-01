@@ -47,12 +47,16 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
     private Span txtJobName;
     @Id("txtJobStatus")
     private Span txtJobStatus;
-    @Id("txtJobStartTime")
-    private Span txtJobStartTime;
-    @Id("txtJobEndTimeLabel")
-    private Span txtJobEndTimeLabel;
-    @Id("txtJobEndTime")
-    private Span txtJobEndTime;
+    @Id("txtJobTime")
+    private Span txtJobTime;
+    @Id("txtJobTimeLabel")
+    private Span txtJobTimeLabel;
+    @Id("txtSimStartTime")
+    private Span txtSimStartTime;
+    @Id("txtSimEndTime")
+    private Span txtSimEndTime;
+    @Id("txtSimEndTimeLabel")
+    private Span txtSimEndTimeLabel;
     @Id("txtJobCapacity")
     private Span txtJobCapacity;
     @Id("txtJobOccupancy")
@@ -111,26 +115,34 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
 
         txtJobName.setText(job.getSimulation().getName());
         txtJobStatus.setText(job.getStatus().getText());
-        txtJobStartTime.setText(job.getJobStartTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
 
         switch (job.getStatus()) {
             case Running:
                 txtJobStatus.addClassName("text-success");
-                txtJobEndTimeLabel.setText("Current time");
+                txtJobTimeLabel.setText("Job StartTime");
+                txtJobTime.setText(job.getJobStartTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
+                txtSimStartTime.setText(job.getSimulationStartTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
+                txtSimEndTimeLabel.setText("Simu. CurrentTime");
                 LocalDateTime currentTime = JobUtil.getCurrentSimulationTime(job.getJobStartTime(),
                         job.getSimulationStartTime(), job.getSimulation().getTimeUnit());
-                txtJobEndTime.setText(currentTime.format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
+                txtSimEndTime.setText(currentTime.format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
                 break;
             case Stopped:
                 txtJobStatus.addClassName("text-error");
-                txtJobEndTimeLabel.setText("End time");
-                txtJobEndTime.setText(job.getJobEndTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
+                txtJobTimeLabel.setText("Job EndTime");
+                txtJobTime.setText(job.getJobEndTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
+                txtSimStartTime.setText(job.getSimulationStartTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
+                txtSimEndTimeLabel.setText("Simu. EndTime");
+                txtSimEndTime.setText(job.getSimulationEndTime().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FORMAT)));
                 break;
             case Paused:
             case NotYetRun:
                 txtJobStatus.addClassName("text-primary");
-                txtJobEndTimeLabel.setText("");
-                txtJobEndTime.setText("");
+                txtJobTimeLabel.setText("Job StartTime");
+                txtJobTime.setText("--");
+                txtSimStartTime.setText("--");
+                txtSimEndTimeLabel.setText("Simu. CurrentTime");
+                txtSimEndTime.setText("--");
                 break;
         }
 

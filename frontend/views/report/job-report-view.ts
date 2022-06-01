@@ -21,29 +21,30 @@ export class JobReportView extends LitElement {
       <main class="pb-l px-l">
         <vaadin-board>
           <vaadin-board-row>
-            <h2 class="mb-0 mt-xl text-3xl">
-              <span id="txtJobName">Job Name</span>
-            </h2>
+              <h2 class="mb-0 mt-xl text-3xl">
+                <span id="txtJobName">Job Name</span>
+                <span class="mb-0 mt-xl text-l">(<span id="txtJobStatus"></span>)</span>
+              </h2>
           </vaadin-board-row>
           <vaadin-board-row>
             <vaadin-vertical-layout class="p-m">
               <vaadin-horizontal-layout class="capacity-box">
-                <span class="text-m font-semibold">Status</span>
-                <span class="text-m font-semibold" id="txtJobStatus"></span>
+                <span class="text-m font-semibold" id="txtJobTimeLabel">Job Time</span>
+                <span class="text-m font-semibold" id="txtJobTime"></span>
               </vaadin-horizontal-layout>
               <vaadin-horizontal-layout class="capacity-box">
-                <span class="text-m font-semibold">Start time</span>
-                <span class="text-m font-semibold" id="txtJobStartTime"></span>
+                <span class="text-m font-semibold">Simu. StartTime</span>
+                <span class="text-m font-semibold" id="txtSimStartTime"></span>
               </vaadin-horizontal-layout>
               <vaadin-horizontal-layout class="capacity-box">
-                <span class="text-m font-semibold" id="txtJobEndTimeLabel">Current time</span>
-                <span class="text-m font-semibold" id="txtJobEndTime"></span>
+                <span class="text-m font-semibold" id="txtSimEndTimeLabel">Simu. CurrentTime</span>
+                <span class="text-m font-semibold" id="txtSimEndTime"></span>
               </vaadin-horizontal-layout>
             </vaadin-vertical-layout>
             <vaadin-vertical-layout class="p-m">
               <vaadin-horizontal-layout class="capacity-box">
                 <span class="text-m font-semibold">Capacity</span>
-                <span><span class="text-m capacity-badge"theme="badge" id="txtJobCapacity"></span></span>
+                <span><span class="text-m capacity-badge"theme="badge contrast" id="txtJobCapacity"></span></span>
               </vaadin-horizontal-layout>
               <vaadin-horizontal-layout class="capacity-box">
                 <span class="text-m font-semibold">Occupied</span>

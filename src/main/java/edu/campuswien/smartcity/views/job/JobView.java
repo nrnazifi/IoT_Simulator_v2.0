@@ -144,7 +144,8 @@ public class JobView extends LitTemplate implements HasComponents, HasStyle {
                 case NotYetRun:
                     return startBtn;
                 case Running:
-                    return new HorizontalLayout(stopBtn, pauseBtn);
+                    //return new HorizontalLayout(stopBtn, pauseBtn);
+                    return stopBtn;
                 case Paused:
                     return resumeBtn;
                 case Stopped:
