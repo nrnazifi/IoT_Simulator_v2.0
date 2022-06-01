@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.vaadin.artur.helpers.CrudService;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +49,44 @@ public class ParkingRecordService extends CrudService<ParkingRecord, Long> {
                 return repository.findAvgOfDurationPerWeek(job.getId());
             case DayOfWeek:
                 return repository.findAvgOfDurationPerDayOfWeek(job.getId());
+        }
+        return new ArrayList<>();
+    }
+
+    public List<DurationMinuteAverage> findAverageOfDurations_Days(Job job, ReportAggregationType aggregationType) {
+        if(job == null || job.getId() == null) {
+            return new ArrayList<>();
+        }
+
+        LocalTime sunrise = job.getSimulation().getParkingLot().getDaylight();
+        LocalTime sunset = job.getSimulation().getParkingLot().getDarkness();
+
+        switch (aggregationType) {
+            case Days:
+                return repository.findAvgOfDurationPerDate_Day(job.getId(), sunrise, sunset);
+            case Weeks:
+                return repository.findAvgOfDurationPerWeek_Day(job.getId(), sunrise, sunset);
+            case DayOfWeek:
+                return repository.findAvgOfDurationPerDayOfWeek_Day(job.getId(), sunrise, sunset);
+        }
+        return new ArrayList<>();
+    }
+
+    public List<DurationMinuteAverage> findAverageOfDurations_Nights(Job job, ReportAggregationType aggregationType) {
+        if(job == null || job.getId() == null) {
+            return new ArrayList<>();
+        }
+
+        LocalTime sunrise = job.getSimulation().getParkingLot().getDaylight();
+        LocalTime sunset = job.getSimulation().getParkingLot().getDarkness();
+
+        switch (aggregationType) {
+            case Days:
+                return repository.findAvgOfDurationPerDate_Night(job.getId(), sunrise, sunset);
+            case Weeks:
+                return repository.findAvgOfDurationPerWeek_Night(job.getId(), sunrise, sunset);
+            case DayOfWeek:
+                return repository.findAvgOfDurationPerDayOfWeek_Night(job.getId(), sunrise, sunset);
         }
         return new ArrayList<>();
     }

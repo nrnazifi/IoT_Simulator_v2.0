@@ -169,18 +169,20 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
 
     private void setChartInfo() {
         ddlDurationChartTimes.setItems(ReportAggregationType.values());
-        ddlDurationChartTimes.setValue(ReportAggregationType.DayOfWeek);
+        ddlDurationChartTimes.setValue(ReportAggregationType.Days);
         ddlDurationChartTimes.addValueChangeListener(e -> drawDurationAverageChart(e.getValue()));
         drawDurationAverageChart(ddlDurationChartTimes.getValue());
 
         ddlRequestChartTimes.setItems(ReportAggregationType.values());
-        ddlRequestChartTimes.setValue(ReportAggregationType.DayOfWeek);
+        ddlRequestChartTimes.setValue(ReportAggregationType.Days);
         ddlRequestChartTimes.addValueChangeListener(e -> drawRequestNumberChart(e.getValue()));
         drawRequestNumberChart(ddlRequestChartTimes.getValue());
     }
 
     private void drawDurationAverageChart(ReportAggregationType chartTimeType) {
         List<DurationMinuteAverage> durationResult = recordService.findAverageOfDurations(job, chartTimeType);
+        List<DurationMinuteAverage> daysDurationResult = recordService.findAverageOfDurations_Days(job, chartTimeType);
+        List<DurationMinuteAverage> nightsDurationResult = recordService.findAverageOfDurations_Nights(job, chartTimeType);
 
         String[] labels = {};
         switch (chartTimeType) {
@@ -196,7 +198,9 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
         }
 
         ListSeries values = new ListSeries("Duration average (min)", durationResult.stream().map(DurationMinuteAverage::getValue).toArray(Number[]::new));
-        drawChart(viewDurationChart, chartTimeType, labels, values);
+        ListSeries dayValues = new ListSeries("In day", daysDurationResult.stream().map(DurationMinuteAverage::getValue).toArray(Number[]::new));
+        ListSeries nightValues = new ListSeries("At night", nightsDurationResult.stream().map(DurationMinuteAverage::getValue).toArray(Number[]::new));
+        drawChart(viewDurationChart, chartTimeType, labels, values, dayValues, nightValues);
     }
 
     private void drawRequestNumberChart(ReportAggregationType chartTimeType) {
@@ -216,13 +220,17 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
         }
         ListSeries values = new ListSeries("Request number", requestResult.stream().map(RequestNumber::getValue).toArray(Number[]::new));
 
-        drawChart(viewRequestChart, chartTimeType, labels, values);
+        drawChart(viewRequestChart, chartTimeType, labels, values, null, null);
     }
 
-    private void drawChart(Chart chart, ReportAggregationType chartTimeType, String[] labels, ListSeries values) {
+    private void drawChart(Chart chart, ReportAggregationType chartTimeType, String[] labels, ListSeries values, ListSeries dayValues, ListSeries nightValues) {
         Configuration configuration = chart.getConfiguration();
         chart.getConfiguration().getChart().setType(ChartType.LINE);
-        configuration.setSeries(values);
+        if(dayValues != null && nightValues != null) {
+            configuration.setSeries(values, nightValues, dayValues);
+        } else {
+            configuration.setSeries(values);
+        }
 
         XAxis xAxis = new XAxis();
         xAxis.setTitle(chartTimeType.toString());
