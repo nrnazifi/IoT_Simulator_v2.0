@@ -21,7 +21,7 @@ public abstract class ScheduledJob {
         if(executorService != null) {
             executorService.shutdown();
             try {
-                if (!executorService.awaitTermination(30, TimeUnit.SECONDS)) {
+                if (!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
                     executorService.shutdownNow();
                 }
             } catch (InterruptedException e) {

@@ -49,11 +49,13 @@ public class ScheduledParkingJob extends ScheduledJob {
     public boolean start() {
         if(simulation.isScheduleNow()) {
             job.setJobStartTime(LocalDateTime.now());
+            job.setJobEndTime(null);
             if(simulation.isCustomizeSimulationTime() && simulation.getSimulationStartTime() != null) {
                 job.setSimulationStartTime(simulation.getSimulationStartTime());
             } else {
                 job.setSimulationStartTime(job.getJobStartTime());
             }
+            job.setSimulationEndTime(simulation.getSimulationEndTime());
             job.setStatus(JobStatusEnum.Running);
             jobService.update(job);
 
@@ -296,8 +298,12 @@ public class ScheduledParkingJob extends ScheduledJob {
                 }
             }
 
-            // at the end calls schedule() again
-            schedule(new ParkingTimerTask(), minTime);
+            // at the end calls schedule() again or stop the job
+            if(simulation.getSimulationEndTime() != null && simulation.getSimulationEndTime().isBefore(getSimulationTime())) {
+                stop();
+            } else {
+                schedule(new ParkingTimerTask(), minTime);
+            }
         }
     }
 }
