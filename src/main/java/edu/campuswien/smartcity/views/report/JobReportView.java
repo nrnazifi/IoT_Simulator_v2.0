@@ -16,6 +16,7 @@ import edu.campuswien.smartcity.data.entity.ParkingLot;
 import edu.campuswien.smartcity.data.entity.ParkingRecord;
 import edu.campuswien.smartcity.data.entity.ParkingSpot;
 import edu.campuswien.smartcity.data.enums.ReportAggregationType;
+import edu.campuswien.smartcity.data.report.DurationExponential;
 import edu.campuswien.smartcity.data.report.DurationMinuteAverage;
 import edu.campuswien.smartcity.data.report.RequestNumber;
 import edu.campuswien.smartcity.data.service.JobService;
@@ -74,6 +75,8 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
     private Chart viewDurationChart;
     @Id("viewRequestChart")
     private Chart viewRequestChart;
+    @Id("viewExponentialChart")
+    private Chart viewExponentialChart;
 
     private Job job;
     private final JobService jobService;
@@ -106,6 +109,7 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
     private void makeView() {
         setJobBaseInfo();
         setChartInfo();
+        drawExponentialChartInfo();
 
         exportCsv.addClickListener(e -> onExportCsv());
     }
@@ -283,4 +287,30 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
         }
     }
 
+    private void drawExponentialChartInfo() {
+        List<DurationExponential> durationResult = recordService.getExponentialDurationTimes(job);
+        String[] labels = durationResult.stream().map(e -> e.getDuration().toString()).toArray(String[]::new);
+        ListSeries values = new ListSeries("Duration (minutes)", durationResult.stream().map(DurationExponential::getSize).toArray(Number[]::new));
+
+        Configuration configuration = viewExponentialChart.getConfiguration();
+        viewExponentialChart.getConfiguration().getChart().setType(ChartType.COLUMN);
+        configuration.setSeries(values);
+
+        XAxis xAxis = new XAxis();
+        xAxis.setTitle("Minute");
+        xAxis.setCategories(labels);
+        configuration.removexAxes();
+        configuration.addxAxis(xAxis);
+
+        YAxis yAxis = new YAxis();
+        yAxis.setTitle("Number");
+        configuration.removeyAxes();
+        configuration.addyAxis(yAxis);
+
+        Tooltip tooltip = new Tooltip();
+        tooltip.setShared(true);
+        configuration.setTooltip(tooltip);
+
+        viewExponentialChart.drawChart();
+    }
 }

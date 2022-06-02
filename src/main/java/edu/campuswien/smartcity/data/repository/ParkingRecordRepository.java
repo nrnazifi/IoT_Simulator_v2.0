@@ -1,6 +1,7 @@
 package edu.campuswien.smartcity.data.repository;
 
 import edu.campuswien.smartcity.data.entity.ParkingRecord;
+import edu.campuswien.smartcity.data.report.DurationExponential;
 import edu.campuswien.smartcity.data.report.DurationMinuteAverage;
 import edu.campuswien.smartcity.data.report.RequestNumber;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -80,4 +81,9 @@ public interface ParkingRecordRepository extends JpaRepository<ParkingRecord, Lo
             "FROM parking_record where job_id = ?1 group by DAYNAME(arrival_time) order by WEEKDAY(arrival_time) asc",
             nativeQuery = true)
     public List<RequestNumber> findRequestNumberPerDayOfWeek(long jobId);
+
+    @Query(value = "SELECT round(duration_seconds/60) as duration, count(*) as size  FROM parking_record where job_id = 1 " +
+            "group by round(duration_seconds/60) order by duration asc;",
+            nativeQuery = true)
+    public List<DurationExponential> findAllGroupByDuration(long jobId);
 }

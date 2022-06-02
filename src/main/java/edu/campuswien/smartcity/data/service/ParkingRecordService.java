@@ -3,6 +3,7 @@ package edu.campuswien.smartcity.data.service;
 import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.entity.ParkingRecord;
 import edu.campuswien.smartcity.data.enums.ReportAggregationType;
+import edu.campuswien.smartcity.data.report.DurationExponential;
 import edu.campuswien.smartcity.data.report.DurationMinuteAverage;
 import edu.campuswien.smartcity.data.report.RequestNumber;
 import edu.campuswien.smartcity.data.repository.ParkingRecordRepository;
@@ -105,6 +106,13 @@ public class ParkingRecordService extends CrudService<ParkingRecord, Long> {
                 return repository.findRequestNumberPerDayOfWeek(job.getId());
         }
         return new ArrayList<>();
+    }
+
+    public List<DurationExponential> getExponentialDurationTimes(Job job) {
+        if(job == null || job.getId() == null) {
+            return new ArrayList<>();
+        }
+        return repository.findAllGroupByDuration(job.getId());
     }
 
 }

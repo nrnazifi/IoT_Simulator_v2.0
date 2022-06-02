@@ -88,6 +88,15 @@ export class JobReportView extends LitElement {
               <vaadin-chart id="viewRequestChart" type="area"></vaadin-chart>
             </vaadin-vertical-layout>
           </vaadin-board-row>
+          <vaadin-board-row>
+            <vaadin-vertical-layout class="p-l" theme="spacing-l">
+              <vaadin-vertical-layout>
+                <h2 class="text-xl m-0">Exponential Chart for duration</h2>
+                <span class="text-secondary text-xs">Number/Minute</span>
+              </vaadin-vertical-layout>
+              <vaadin-chart id="viewExponentialChart" type="area"></vaadin-chart>
+            </vaadin-vertical-layout>
+          </vaadin-board-row>
         </vaadin-board>
       </main>
     `;
