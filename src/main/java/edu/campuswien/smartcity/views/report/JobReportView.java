@@ -5,11 +5,14 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.*;
 import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.littemplate.LitTemplate;
 import com.vaadin.flow.component.select.Select;
 import com.vaadin.flow.component.template.Id;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.server.StreamResource;
 import edu.campuswien.smartcity.config.Constants;
 import edu.campuswien.smartcity.data.entity.Job;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
@@ -27,11 +30,11 @@ import edu.campuswien.smartcity.views.MainLayout;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.QuoteMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -43,6 +46,8 @@ import java.util.Optional;
 @JsModule("./views/report/job-report-view.ts")
 public class JobReportView extends LitTemplate implements BeforeEnterObserver {
     private static final long serialVersionUID = 3450816484053818388L;
+
+    Logger LOGGER = LoggerFactory.getLogger(JobReportView.class);
 
     @Id("txtJobName")
     private Span txtJobName;
@@ -66,6 +71,8 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
     private Span txtJobVacant;
     @Id("exportCsv")
     private Button exportCsv;
+    @Id("downloadLink")
+    private Div downloadLink;
 
     @Id("ddlDurationChartTimes")
     private Select<ReportAggregationType> ddlDurationChartTimes;
@@ -112,6 +119,7 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
         drawExponentialChartInfo();
 
         exportCsv.addClickListener(e -> onExportCsv());
+        downloadLink.removeAll();
     }
 
     private void setJobBaseInfo() {
@@ -258,8 +266,14 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
     private void onExportCsv() {
         List<ParkingRecord> records = recordService.list(job.getId());
         try {
-            String name = job.getSimulation().getName() + "_" + LocalDate.now().format(DateTimeFormatter.ofPattern(Constants.DATE_FORMAT)) + ".csv";
-            FileWriter out = new FileWriter(name);
+            File directory = new File("tempFiles");
+            if(!directory.exists()) {
+                directory.mkdir();
+            }
+
+            String filename = job.getSimulation().getName() + "_" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(Constants.DATETIME_FILE_FORMAT)) + ".csv";
+            File csvFile = new File(directory.getPath() + "/" + filename);
+            FileWriter out = new FileWriter(csvFile);
             CSVFormat format = CSVFormat.DEFAULT.builder()
                     .setHeader("deviceid", "arrivaltime", "departuretime", "durationseconds", "vehiclepresent")
                     .setEscape('\\')
@@ -267,7 +281,6 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
                     .build();
 
             try (CSVPrinter printer = new CSVPrinter(out, format)) {
-                //printer.printHeaders(new );
                 records.forEach(item -> {
                     try {
                         printer.printRecord(
@@ -278,13 +291,39 @@ public class JobReportView extends LitTemplate implements BeforeEnterObserver {
                                 item.getStatus()
                         );
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        LOGGER.error("CSVPrinter", e);
                     }
+                });
+            } finally {
+                // https://stackoverflow.com/questions/60822729/dynamically-created-content-for-download-without-writing-a-file-on-server-side-i
+                Anchor anchor = new Anchor(getStreamResource(filename, csvFile), "Download CSV");
+                anchor.getElement().setAttribute("download", true);
+                anchor.setId(String.valueOf(System.currentTimeMillis()));
+                //Button downloadButton = new Button(new Icon(VaadinIcon.DOWNLOAD_ALT));
+                //anchor.add( downloadButton );
+
+                downloadLink.removeAll();
+                downloadLink.add(anchor);
+
+                anchor.getElement().addEventListener("click", e -> {
+                    anchor.setVisible(false);
+                    //csvFile.delete(); TODO remove files of temp directory
                 });
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("onExportCsv()", e);
         }
+    }
+
+    public StreamResource getStreamResource(String filename, File content) {
+        return new StreamResource(filename, () -> {
+            try {
+                return new BufferedInputStream(new FileInputStream(content));
+            } catch (IOException e) {
+                LOGGER.error("getStreamResource()", e);
+            }
+            return null;
+        });
     }
 
     private void drawExponentialChartInfo() {

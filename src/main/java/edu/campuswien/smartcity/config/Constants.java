@@ -7,6 +7,7 @@ public class Constants {
     public static String DATETIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
     public static String DATE_FORMAT = "dd-MM-yyyy";
     public static String DAY_DATE_FORMAT = "E, dd MMM y";
+    public static String DATETIME_FILE_FORMAT = "dd-MM-yyyy_HHmmss";
 
     public static RandomGenerator RANDOM_GENERATOR_ALGORITHM = new Well1024a();
 }

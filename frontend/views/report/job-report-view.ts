@@ -61,6 +61,7 @@ export class JobReportView extends LitElement {
                 <span class="text-m font-semibold">Export</span>
                 <vaadin-button id="exportCsv" theme="small">CSV</vaadin-button>
               </vaadin-horizontal-layout>
+              <div id="downloadLink"></div>
             </vaadin-vertical-layout>
             
           </vaadin-board-row>

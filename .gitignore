@@ -21,3 +21,4 @@ webpack.generated.js
 /package-lock.json
 /webpack.config.js
 /logs/
+/tempFiles/

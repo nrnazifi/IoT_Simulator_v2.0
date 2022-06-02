@@ -2,8 +2,8 @@ package edu.campuswien.smartcity.data.enums;
 
 public enum ReportAggregationType {
     Days,
-    Weeks,
     DayOfWeek,
+    Weeks,
     Months,
     Years
 }
