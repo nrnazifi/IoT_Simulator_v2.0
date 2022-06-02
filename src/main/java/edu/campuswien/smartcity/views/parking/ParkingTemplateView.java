@@ -95,7 +95,8 @@ public class ParkingTemplateView extends LitTemplate implements HasComponents, H
     }
 
     protected void onShowSpots(ParkingLot parkingLot) {
-        UI.getCurrent().navigate(ParkingSpotsView.class, new RouteParameters("parkingId", parkingLot.getId().toString()));
+        //TODO show spots?
+        //UI.getCurrent().navigate(ParkingSpotsView.class, new RouteParameters("parkingId", parkingLot.getId().toString()));
     }
 
     protected void onDuplicate(ParkingLot parkingLot) {

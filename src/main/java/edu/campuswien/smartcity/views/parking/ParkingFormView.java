@@ -89,8 +89,6 @@ public class ParkingFormView extends LitTemplate {
     private Button btnCancel;
     @Id("btnDelete")
     private Button btnDelete;
-    @Id("btnGenerate")
-    private Button btnGenerate;
     @Id("btnShowSpots")
     private Button btnShowSpots;
 
@@ -109,18 +107,15 @@ public class ParkingFormView extends LitTemplate {
         //Set Icons for buttons
         btnSave.setIcon(new Icon(VaadinIcon.HARDDRIVE_O));
         btnDelete.setIcon(new Icon(VaadinIcon.TRASH));
-        btnGenerate.setIcon(new Icon(VaadinIcon.MAGIC));
         btnShowSpots.setIcon(new Icon(VaadinIcon.LINES_LIST));
         //Set icons in right side
         btnSave.setIconAfterText(true);
         btnDelete.setIconAfterText(true);
-        btnGenerate.setIconAfterText(true);
         btnShowSpots.setIconAfterText(true);
 
         btnCancel.addClickListener(e -> closeForm());
         btnSave.addClickListener(e -> saveForm());
         btnDelete.addClickListener(e -> delete());
-        btnGenerate.addClickListener(e -> generateSpots());
         btnShowSpots.addClickListener(e -> showSpots());
 
         createOccupiedDetails();
@@ -218,17 +213,15 @@ public class ParkingFormView extends LitTemplate {
             if(parkingLot.getId() == null) {
                 //new: disable buttons
                 btnDelete.setVisible(false);
-                btnGenerate.setVisible(false);
                 btnShowSpots.setEnabled(false);
             } else {
                 //edit: enable buttons
                 btnDelete.setVisible(true);
-                btnGenerate.setVisible(true);
-                /*if(parkingLot.getSpots().isEmpty()) {
+                if(parkingLot.getSpots().isEmpty()) {
                     btnShowSpots.setEnabled(false);
                 } else {
                     btnShowSpots.setEnabled(true);
-                }*/
+                }
             }
         }
 
@@ -326,36 +319,6 @@ public class ParkingFormView extends LitTemplate {
         closeForm();
         mainView.updateContent();
         Notification.show(parkingLot.getName() + " is deleted!", 5000, Notification.Position.TOP_CENTER);
-    }
-
-    private void generateSpots() {
-        /*ParkingSpotService parkingSpotService = mainView.getParkingSpotService();
-        ParkingLot parkingLot = binder.getBean();
-
-        if(!parkingLot.getSpots().isEmpty()) {
-            parkingLot.getSpots().clear();
-            parkingLotService.update(parkingLot);
-        }
-
-        String name = parkingLot.getName();
-        List<ParkingSpot> spots = new ArrayList<ParkingSpot>();
-        for(long i = parkingLot.getStartId(); i < parkingLot.getCapacity() + parkingLot.getStartId(); i++) {
-            ParkingSpot spot = new ParkingSpot();
-            spot.setParkingLot(parkingLot);
-            spot.setDeviceId(name+ "_" +i);
-            spots.add(spot);
-            parkingSpotService.update(spot);
-        }
-        parkingLot.getSpots().addAll(spots);
-        parkingLot.setLastUpdatedTime(LocalDateTime.now());
-        //parkingLotService.update(parkingLot);
-
-        //parkingLot = parkingLotService.get(parkingLot.getId()).get();
-        mainView.updateContent();
-        Notification notification = Notification.show("Spots of the " + parkingLot.getName() + " are generated!", 5000, Notification.Position.TOP_CENTER);
-        notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-        btnShowSpots.setEnabled(true);
-        btnGenerate.setEnabled(false);*/
     }
 
     private void showSpots() {

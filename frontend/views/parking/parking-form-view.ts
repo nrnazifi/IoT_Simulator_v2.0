@@ -23,7 +23,6 @@ export class ParkingFormView extends LitElement {
             </vaadin-vertical-layout>
             <vaadin-horizontal-layout class="items-center justify-between" theme="on spacing-s">
                 <vaadin-button theme="primary contrast" id="btnShowSpots">Show Spots</vaadin-button>
-                <vaadin-button theme="success primary" id="btnGenerate">[Re]Generate Spots</vaadin-button>
                 <vaadin-button theme="primary" id="btnSave">Save</vaadin-button>
                 <vaadin-button theme="error primary" id="btnDelete">Delete</vaadin-button>
             </vaadin-horizontal-layout>
