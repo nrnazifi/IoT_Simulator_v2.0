@@ -49,7 +49,7 @@ public abstract class ScheduledJob {
     public double randomExponential(double mean) {
         ExponentialDistribution distribution = new ExponentialDistribution(Constants.RANDOM_GENERATOR_ALGORITHM, mean);
 
-        return distribution.sample() + 1; //location is 1
+        return distribution.sample(); //location is 0
     }
 
 }
