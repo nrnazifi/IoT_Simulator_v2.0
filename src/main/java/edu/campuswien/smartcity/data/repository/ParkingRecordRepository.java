@@ -82,7 +82,7 @@ public interface ParkingRecordRepository extends JpaRepository<ParkingRecord, Lo
             nativeQuery = true)
     public List<RequestNumber> findRequestNumberPerDayOfWeek(long jobId);
 
-    @Query(value = "SELECT round(duration_seconds/60) as duration, count(*) as size  FROM parking_record where job_id = 1 " +
+    @Query(value = "SELECT round(duration_seconds/60) as duration, count(*) as size  FROM parking_record where job_id = ?1 " +
             "group by round(duration_seconds/60) order by duration asc;",
             nativeQuery = true)
     public List<DurationExponential> findAllGroupByDuration(long jobId);
