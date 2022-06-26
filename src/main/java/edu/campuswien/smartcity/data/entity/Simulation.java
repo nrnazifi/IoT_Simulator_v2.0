@@ -1,6 +1,7 @@
 package edu.campuswien.smartcity.data.entity;
 
 import edu.campuswien.smartcity.data.enums.DataFormatEnum;
+import edu.campuswien.smartcity.data.enums.DistributionEnum;
 import edu.campuswien.smartcity.data.enums.ProtocolEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,6 +56,10 @@ public class Simulation extends AbstractEntity {
     @Enumerated
     @Column(columnDefinition = "smallint")
     private DataFormatEnum dataFormat;
+
+    @Enumerated
+    @Column(columnDefinition = "smallint")
+    private DistributionEnum distribution;
 
     @OneToMany(mappedBy = "simulation", targetEntity = Job.class, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Job> jobs;

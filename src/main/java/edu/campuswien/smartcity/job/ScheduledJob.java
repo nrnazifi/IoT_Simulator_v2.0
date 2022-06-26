@@ -1,7 +1,10 @@
 package edu.campuswien.smartcity.job;
 
-import edu.campuswien.smartcity.config.Constants;
+import com.vaadin.flow.router.NotFoundException;
+import edu.campuswien.smartcity.data.enums.DistributionEnum;
 import org.apache.commons.math3.distribution.ExponentialDistribution;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.distribution.WeibullDistribution;
 
 import java.util.Random;
 import java.util.TimerTask;
@@ -44,12 +47,34 @@ public abstract class ScheduledJob {
     }
 
     /**
-     * Generates an exponential random number, because the average of the duration in time series data is normally exponentially distributed
+     * Generates an exponential random number (default distribution)
+     * because the average of the duration in time series data is normally exponentially distributed
      */
     public double randomExponential(double mean) {
-        ExponentialDistribution distribution = new ExponentialDistribution(Constants.RANDOM_GENERATOR_ALGORITHM, mean);
-
+        ExponentialDistribution distribution = new ExponentialDistribution(mean);
         return distribution.sample(); //location is 0
+    }
+
+    public double randomNormal(double mean, double sd) {
+        NormalDistribution distribution = new NormalDistribution(mean, sd);
+        return distribution.sample();
+    }
+
+    public double randomWeibull(double alpha, double beta) {
+        WeibullDistribution distribution = new WeibullDistribution(alpha, beta);
+        return distribution.sample();
+    }
+
+    public double randomNumber(DistributionEnum distribution, double... args) {
+        switch (distribution) {
+            case Normal:
+                return randomNormal(args[0], args[1]);
+            case Exponential:
+                return randomExponential(args[0]);
+            case Weibull:
+                return randomWeibull(args[0], args[1]);
+        }
+        throw new NotFoundException("Distribution function not found!");
     }
 
 }

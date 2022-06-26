@@ -34,6 +34,10 @@ export class SimulationFormView extends LitElement {
                 <vaadin-number-field label="Time Unit" id="timeUnit" 
                                      helper-text="The factor defines how much real time passes with each step of simulation time"></vaadin-number-field>
                 <span id="calculationTimeUnit">A unit of simulation time will take</span>
+                <vaadin-checkbox-group label="Simulator Algorithm" theme="vertical">
+                    <vaadin-checkbox label="Default" value="true" checked disabled>Default</vaadin-checkbox>
+                </vaadin-checkbox-group>
+                <vaadin-combo-box label="Distribution Function" id="distributionFunctions"></vaadin-combo-box>
 
                 <hr colspan="2"/>
                 <vaadin-radio-group id="simulationTimeRadio" label="Simulation Start/End Time" theme="vertical" 

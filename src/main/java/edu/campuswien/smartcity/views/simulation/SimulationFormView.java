@@ -27,6 +27,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import edu.campuswien.smartcity.data.enums.DataFormatEnum;
 import edu.campuswien.smartcity.data.entity.ParkingLot;
+import edu.campuswien.smartcity.data.enums.DistributionEnum;
 import edu.campuswien.smartcity.data.enums.ProtocolEnum;
 import edu.campuswien.smartcity.data.entity.Simulation;
 import edu.campuswien.smartcity.data.service.ParkingLotService;
@@ -58,6 +59,8 @@ public class SimulationFormView extends LitTemplate {
     private ComboBox<ParkingLot> parkingLots;
     @Id("timeUnit")
     private NumberField timeUnit;
+    @Id("distributionFunctions")
+    private ComboBox<DistributionEnum> distributionFunctions;
     @Id("calculationTimeUnit")
     private Span calculationTimeUnit;
     @Id("simulationTimeRadio")
@@ -147,6 +150,9 @@ public class SimulationFormView extends LitTemplate {
         dataFormatRadio.setItemEnabledProvider(e -> !e.equals(DataFormatEnum.CSV) && !e.equals(DataFormatEnum.XML));
 
         timeUnit.addValueChangeListener(e -> calculateAndShowTimeUnit(e.getValue()));
+
+        distributionFunctions.setItems(DistributionEnum.values());
+        distributionFunctions.setItemLabelGenerator(DistributionEnum::getDescription);
     }
 
     public void setSimulation(Simulation simulation) {
@@ -158,6 +164,7 @@ public class SimulationFormView extends LitTemplate {
             setVisible(true);
             name.focus();
             parkingLots.setValue(simulation.getParkingLot());
+            distributionFunctions.setValue(simulation.getDistribution() != null ? simulation.getDistribution() : DistributionEnum.Exponential);
             //set simulation timing
             if(simulation.isCustomizeSimulationTime()) {
                 simulationTimeRadio.setValue(SIMULATION_WITH_CUSTOMIZE_TIME);
@@ -228,6 +235,7 @@ public class SimulationFormView extends LitTemplate {
             simulation.setProtocol(null);
             simulation.setDataFormat(null);
         }
+        simulation.setDistribution(distributionFunctions.getValue());
         simulationService.update(simulation);
 
         closeForm();
