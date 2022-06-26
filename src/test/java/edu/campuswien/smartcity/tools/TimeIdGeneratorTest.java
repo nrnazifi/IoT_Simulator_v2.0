@@ -1,4 +1,4 @@
-package edu.campuswien.smartcity.time;
+package edu.campuswien.smartcity.tools;
 
 import org.junit.jupiter.api.Test;
 import java.util.Date;

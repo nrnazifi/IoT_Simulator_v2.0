@@ -1,15 +1,11 @@
 package edu.campuswien.smartcity.publish.coap;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import edu.campuswien.smartcity.config.Constants;
 import edu.campuswien.smartcity.data.entity.ParkingRecord;
-import edu.campuswien.smartcity.time.DataFormatUtil;
+import edu.campuswien.smartcity.tools.DataFormatUtil;
 import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapHandler;
 import org.eclipse.californium.core.CoapResponse;
-
-import java.time.format.DateTimeFormatter;
 
 public class CoapPublisher {
     private final CoapClient coapClient;

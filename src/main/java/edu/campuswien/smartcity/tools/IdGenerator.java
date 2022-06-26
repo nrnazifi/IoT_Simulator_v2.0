@@ -1,4 +1,4 @@
-package edu.campuswien.smartcity.time;
+package edu.campuswien.smartcity.tools;
 
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;

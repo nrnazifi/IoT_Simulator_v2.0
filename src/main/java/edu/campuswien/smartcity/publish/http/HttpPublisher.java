@@ -2,7 +2,7 @@ package edu.campuswien.smartcity.publish.http;
 
 import com.google.gson.JsonElement;
 import edu.campuswien.smartcity.data.entity.ParkingRecord;
-import edu.campuswien.smartcity.time.DataFormatUtil;
+import edu.campuswien.smartcity.tools.DataFormatUtil;
 import okhttp3.*;
 
 public class HttpPublisher {

@@ -1,13 +1,9 @@
 package edu.campuswien.smartcity.data.entity;
 
-import edu.campuswien.smartcity.time.IdGenerator;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.util.UUID;
 import javax.persistence.*;
 
 @MappedSuperclass
@@ -17,7 +13,7 @@ public abstract class AbstractEntity {
 
     @Id
     @Column
-    @GenericGenerator(name = "oid", strategy = "edu.campuswien.smartcity.time.IdGenerator")
+    @GenericGenerator(name = "oid", strategy = "edu.campuswien.smartcity.tools.IdGenerator")
     @GeneratedValue(generator = "oid")
     private Long id;
 

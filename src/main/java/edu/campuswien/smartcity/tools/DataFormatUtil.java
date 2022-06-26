@@ -1,4 +1,4 @@
-package edu.campuswien.smartcity.time;
+package edu.campuswien.smartcity.tools;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
