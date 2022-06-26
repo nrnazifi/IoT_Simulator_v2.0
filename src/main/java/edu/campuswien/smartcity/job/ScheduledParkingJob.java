@@ -5,6 +5,7 @@ import edu.campuswien.smartcity.data.enums.DayCategoryEnum;
 import edu.campuswien.smartcity.data.enums.DayTypeEnum;
 import edu.campuswien.smartcity.data.enums.JobStatusEnum;
 import edu.campuswien.smartcity.data.service.*;
+import edu.campuswien.smartcity.publish.ParkingPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -28,6 +29,7 @@ public class ScheduledParkingJob extends ScheduledJob {
     private final ParkingSpotService spotService;
     private final ParkingRecordService recordService;
     private final InternalLogger dbLogger;
+    private final ParkingPublisher parkingPublisher;
 
     public ScheduledParkingJob(Job job, JobService jobService, ParkingLotService parkingService, ParkingSpotService spotService,
                                ParkingRecordService recordService, InternalLogger dbLogger) {
@@ -37,6 +39,8 @@ public class ScheduledParkingJob extends ScheduledJob {
         this.spotService = spotService;
         this.recordService = recordService;
         this.dbLogger = dbLogger;
+
+        parkingPublisher = new ParkingPublisher(simulation);
     }
 
     public void setJob(Job job) {
@@ -284,7 +288,7 @@ public class ScheduledParkingJob extends ScheduledJob {
                     record.setDepartureTime(currentTime);
                     record.setDurationSeconds(duration.toSeconds());
                     record.setStatus(prevStatus);
-                    recordService.update(record);
+                    saveRecord(record);
 
                     if(roundedTime < minTime) {
                         minTime = roundedTime;
@@ -304,6 +308,16 @@ public class ScheduledParkingJob extends ScheduledJob {
             } else {
                 schedule(new ParkingTimerTask(), minTime);
             }
+        }
+    }
+
+    private void saveRecord(ParkingRecord record) {
+        if(simulation.isOnDatabase()) {
+            recordService.update(record);
+        }
+
+        if(simulation.isOnServer()) {
+            parkingPublisher.publish(record);
         }
     }
 }
