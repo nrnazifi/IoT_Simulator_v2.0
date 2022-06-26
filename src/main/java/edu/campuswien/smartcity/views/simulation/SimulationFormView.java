@@ -142,7 +142,9 @@ public class SimulationFormView extends LitTemplate {
         storageCheckBox.addValueChangeListener(event -> storageDetails.setVisible(event.getValue().contains(STORAGE_ON_SERVER)));
 
         protocolRadio.setItems(ProtocolEnum.values());
+        protocolRadio.setItemEnabledProvider(e -> !e.equals(ProtocolEnum.MQTT));
         dataFormatRadio.setItems(DataFormatEnum.values());
+        dataFormatRadio.setItemEnabledProvider(e -> !e.equals(DataFormatEnum.CSV) && !e.equals(DataFormatEnum.XML));
 
         timeUnit.addValueChangeListener(e -> calculateAndShowTimeUnit(e.getValue()));
     }
